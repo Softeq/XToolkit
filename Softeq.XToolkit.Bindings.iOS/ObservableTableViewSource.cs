@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using Foundation;
+using Softeq.XToolkit.Common.EventArguments;
 using UIKit;
 
 namespace Softeq.XToolkit.Bindings.iOS
@@ -34,7 +35,8 @@ namespace Softeq.XToolkit.Bindings.iOS
         private TItem _selectedItem;
         private UITableView _view;
 
-        public EventHandler LastItemRequested;
+        public event EventHandler LastItemRequested;
+        public event EventHandler<GenericEventArgs<TItem>> ItemClicked;
 
         /// <summary>
         ///     Constructs and initializes an instance of <see cref="ObservableTableViewSource{TItem}" />
@@ -332,6 +334,7 @@ namespace Softeq.XToolkit.Bindings.iOS
         {
             var item = _dataSource != null ? _dataSource[indexPath.Row] : default(TItem);
             SelectedItem = item;
+            ItemClicked?.Invoke(this, new GenericEventArgs<TItem>(item));
         }
 
         /// <summary>

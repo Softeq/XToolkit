@@ -50,5 +50,13 @@ namespace Softeq.XToolkit.Common.Extensions
                 }
             }
         }
+
+        public static void AddRange<T>(this IList<T> items, IList<T> range)
+        {
+            for (var i = 0; i < range.Count; i++)
+            {
+                items.Add(range[i]);
+            }
+        }
     }
 }

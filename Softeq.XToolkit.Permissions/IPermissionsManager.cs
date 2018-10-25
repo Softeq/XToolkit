@@ -9,7 +9,5 @@ namespace Softeq.XToolkit.Permissions
     {
         Task<PermissionStatus> CheckWithRequestAsync(Permission permission);
         Task<PermissionStatus> CheckAsync(Permission permission);
-        void OpenSettings();
     }
-
 }

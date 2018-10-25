@@ -3,11 +3,8 @@
 
 namespace Softeq.XToolkit.Permissions
 {
-    public enum Permission
+    public interface IPermissionRequestHandler
     {
-        Photos,
-        Camera,
-        Storage,
-        Notifications
+        void Handle(int requestCode, string[] permissions, object grantResults);
     }
 }

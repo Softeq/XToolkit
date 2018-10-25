@@ -12,5 +12,6 @@ namespace Softeq.XToolkit.RemoteData.HttpClient
         Task<T> SendAndDeserializeAsync<T>(BaseRestRequest request);
         Task<bool> SendAsync(BaseRestRequest request);
         Task<Stream> GetStreamAsync(BaseRestRequest request);
+        string ApiUrl { get; }
     }
 }

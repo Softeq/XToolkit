@@ -18,6 +18,8 @@ namespace Softeq.XToolkit.RemoteData.HttpClient
             default(IList<(string Header, string Value)>);
 
         public virtual bool HasCustomHeaders => CustomHeaders != null && CustomHeaders.Count > 0;
+        
+        public virtual string Accept => HttpConsts.ApplicationJsonHeaderValue;
 
         public virtual HttpContent GetContent()
         {

@@ -1,13 +1,12 @@
 ﻿// Developed by Softeq Development Corporation
 // http://www.softeq.com
 
-using Softeq.XToolkit.Auth.Internal.Dtos;
 using Softeq.XToolkit.Common.Extensions;
 using Softeq.XToolkit.Common.Interfaces;
 
 namespace Softeq.XToolkit.Auth
 {
-    public class AccountService
+    public class AccountService : IAccountService
     {
         private readonly IInternalSettings _internalSettings;
         private readonly IJsonSerializer _jsonSerializer;
@@ -22,44 +21,58 @@ namespace Softeq.XToolkit.Auth
             _jsonSerializer = jsonSerializer;
         }
 
-        private AccountInfo AccountInfo =>
-            _accountInfo ?? (_accountInfo = GetAccountInfoFromInternalSettings() ?? new AccountInfo());
+        public string UserId => AccountInfo.UserId;
+
+        public string UserName => AccountInfo.UserDisplayName;
+
+        public string UserPhotoUrl => AccountInfo.UserPhotoUrl;
 
         public bool IsAuthorized => !string.IsNullOrEmpty(AccountInfo.AccessToken);
 
         public string AccessToken => AccountInfo.AccessToken;
 
+        public bool IsProxyEnabled => AccountInfo.IsProxyEnabled;
+
+        public string ProxyAddress => AccountInfo.ProxyAddress;
+
         public string RefreshToken => AccountInfo.RefreshToken;
 
-        public string Email => AccountInfo.Email;
+        private AccountInfo AccountInfo =>
+            _accountInfo ?? (_accountInfo = AccountInfoSetting ?? new AccountInfo());
 
-        internal void Clear()
+        public void Logout()
         {
             _accountInfo = null;
-            SetAccountInfoToInternalSettings(default(AccountInfo));
+            AccountInfoSetting = _accountInfo;
         }
 
-        internal void ResetTokens(LoginResultDto loginResult)
+        public void ResetTokens(string accessToken, string refreshToken)
         {
-            AccountInfo.AccessToken = loginResult.AccessToken;
-            AccountInfo.RefreshToken = loginResult.RefreshToken;
-            SetAccountInfoToInternalSettings(AccountInfo);
+            AccountInfo.AccessToken = accessToken;
+            AccountInfo.RefreshToken = refreshToken;
+            AccountInfoSetting = AccountInfo;
         }
 
-        internal void SaveProfileInfo(string email)
+        public void SaveProfileInfo(string modelUserId, string modelName, string modelThumbnailUrl)
         {
-            AccountInfo.Email = email;
-            SetAccountInfoToInternalSettings(AccountInfo);
+            AccountInfo.UserId = modelUserId;
+            AccountInfo.UserDisplayName = modelName;
+            AccountInfo.UserPhotoUrl = modelThumbnailUrl;
+            AccountInfoSetting = AccountInfo;
         }
 
-        private AccountInfo GetAccountInfoFromInternalSettings()
+        public void SaveProxySettings(string proxyAddress, bool isProxyEnabled)
         {
-            return _internalSettings.GetJsonValueOrDefault(_jsonSerializer, nameof(AccountInfo), default(AccountInfo));
+            AccountInfo.IsProxyEnabled = isProxyEnabled;
+            AccountInfo.ProxyAddress = proxyAddress;
+            AccountInfoSetting = AccountInfo;
         }
 
-        private void SetAccountInfoToInternalSettings(AccountInfo accountInfo)
+        private readonly string _accountInfoKey = $"{nameof(AccountService)}_{nameof(AccountInfo)}";
+        private AccountInfo AccountInfoSetting
         {
-            _internalSettings.AddOrUpdateJsonValue(_jsonSerializer, nameof(AccountInfo), accountInfo);
+            get => _internalSettings.GetJsonValueOrDefault(_jsonSerializer, _accountInfoKey, default(AccountInfo));
+            set => _internalSettings.AddOrUpdateJsonValue(_jsonSerializer, _accountInfoKey, value);
         }
     }
 }

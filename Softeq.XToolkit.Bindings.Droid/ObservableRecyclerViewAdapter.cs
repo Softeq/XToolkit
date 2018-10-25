@@ -20,6 +20,9 @@ namespace Softeq.XToolkit.Bindings.Droid
         private INotifyCollectionChanged _notifier;
         private IDisposable _subscription;
 
+        public event EventHandler LastItemRequested;
+        public event EventHandler DataReloaded;
+
         public ObservableRecyclerViewAdapter(
             IList<T> items,
             Func<ViewGroup, int, RecyclerView.ViewHolder> getHolderFunc,
@@ -50,6 +53,8 @@ namespace Softeq.XToolkit.Bindings.Droid
             }
         }
 
+        public bool ShouldNotifyByAction { get; set; }
+
         public override int ItemCount => _dataSource.Count;
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
@@ -61,6 +66,11 @@ namespace Softeq.XToolkit.Bindings.Droid
 
             var item = DataSource[position];
             _bindViewHolderAction.Invoke(holder, position, item);
+
+            if (position > 0 && position == DataSource.Count - 1)
+            {
+                LastItemRequested?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
@@ -87,12 +97,29 @@ namespace Softeq.XToolkit.Bindings.Droid
         {
             if (Looper.MainLooper == Looper.MyLooper())
             {
-                NotifyCollectionChangedByAction(e);
+                NotifyAdapterSource(e);
             }
             else
             {
                 var h = new Handler(Looper.MainLooper);
-                h.Post(() => NotifyCollectionChangedByAction(e));
+                h.Post(() => NotifyAdapterSource(e));
+            }
+        }
+
+        private void NotifyAdapterSource(NotifyCollectionChangedEventArgs e)
+        {
+            if (ShouldNotifyByAction)
+            {
+                NotifyCollectionChangedByAction(e);
+            }
+            else
+            {
+                NotifyDataSetChanged();
+            }
+
+            if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                DataReloaded?.Invoke(this, EventArgs.Empty);
             }
         }
 

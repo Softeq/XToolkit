@@ -9,16 +9,16 @@ using Softeq.XToolkit.RemoteData.HttpClient;
 
 namespace Softeq.XToolkit.Auth
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
-        private readonly AccountService _accountService;
+        private readonly IAccountService _accountService;
         private readonly RemoteAuthService _remoteAuthService;
 
         public AuthService(
             IJsonSerializer jsonSerializer,
             IRestHttpClient restHttpClient,
             ILogManager logManager,
-            AccountService accountService,
+            IAccountService accountService,
             AuthConfig authConfig)
         {
             _remoteAuthService = new RemoteAuthService(jsonSerializer, restHttpClient, logManager, authConfig);
@@ -51,17 +51,17 @@ namespace Softeq.XToolkit.Auth
 
         public void Logout()
         {
-            _accountService.Clear();
+            _accountService.Logout();
         }
 
         private void CompleteLoginAsync(LoginResultDto loginResult, string email)
         {
             //clear all stored data about user
-            _accountService.Clear();
+            _accountService.Logout();
 
             //save auth tokens
-            _accountService.ResetTokens(loginResult);
-            _accountService.SaveProfileInfo(email);
+            _accountService.ResetTokens(loginResult.AccessToken, loginResult.RefreshToken);
+            _accountService.SaveProfileInfo(email, null, null);
         }
     }
 }

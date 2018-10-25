@@ -22,8 +22,6 @@ namespace Softeq.XToolkit.Bindings.iOS
         private readonly Action<T, NSIndexPath> _rowSelectedAction;
         private readonly WeakReferenceEx<UITableView> _tableView;
 
-        private ObservableRangeCollection<T> _dataSource;
-
         public ObservableGroupTableViewSource(
             ObservableRangeCollection<T> dataSource,
             UITableView tableView,
@@ -36,7 +34,7 @@ namespace Softeq.XToolkit.Bindings.iOS
             Func<IList<T>, nint, nfloat> getFooterHeightFunc = null,
             Action<T, NSIndexPath> rowSelectedAction = null)
         {
-            _dataSource = dataSource;
+            DataSource = dataSource;
             _tableView = WeakReferenceEx.Create(tableView);
             _getCellViewFunc = getCellViewFunc;
             _getHeaderViewFunc = getHeaderViewFunc;
@@ -47,9 +45,11 @@ namespace Softeq.XToolkit.Bindings.iOS
             _getFooterHeightFunc = getFooterHeightFunc;
             _rowSelectedAction = rowSelectedAction;
 
-            _dataSource = dataSource;
-            _dataSource.CollectionChanged += OnCollectionChanged;
+            DataSource = dataSource;
+            DataSource.CollectionChanged += OnCollectionChanged;
         }
+        
+        public ObservableRangeCollection<T> DataSource { get; private set; }
 
         public nfloat? HeightForRow { get; set; }
 
@@ -59,42 +59,42 @@ namespace Softeq.XToolkit.Bindings.iOS
 
         public void ResetCollection(ObservableRangeCollection<T> dataSource)
         {
-            if (_dataSource != null)
+            if (DataSource != null)
             {
-                _dataSource.CollectionChanged -= OnCollectionChanged;
+                DataSource.CollectionChanged -= OnCollectionChanged;
             }
 
-            _dataSource = dataSource;
-            _dataSource.CollectionChanged += OnCollectionChanged;
+            DataSource = dataSource;
+            DataSource.CollectionChanged += OnCollectionChanged;
         }
 
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
         {
-            return _getCellViewFunc.Invoke(tableView, indexPath, _dataSource);
+            return _getCellViewFunc.Invoke(tableView, indexPath, DataSource);
         }
 
         public override UIView GetViewForHeader(UITableView tableView, nint section)
         {
             return _getHeaderViewFunc != null
-                ? _getHeaderViewFunc.Invoke(tableView, section, _dataSource)
+                ? _getHeaderViewFunc.Invoke(tableView, section, DataSource)
                 : new UIView();
         }
 
         public override UIView GetViewForFooter(UITableView tableView, nint section)
         {
             return _getFooterViewFunc != null
-                ? _getFooterViewFunc.Invoke(tableView, _dataSource, section)
+                ? _getFooterViewFunc.Invoke(tableView, DataSource, section)
                 : new UIView();
         }
 
         public override nint NumberOfSections(UITableView tableView)
         {
-            return _getSectionCountFunc.Invoke(_dataSource);
+            return _getSectionCountFunc.Invoke(DataSource);
         }
 
         public override nint RowsInSection(UITableView tableview, nint section)
         {
-            return _getRowInSectionCountFunc.Invoke(_dataSource, section);
+            return _getRowInSectionCountFunc.Invoke(DataSource, section);
         }
 
         public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
@@ -106,7 +106,7 @@ namespace Softeq.XToolkit.Bindings.iOS
         {
             if (_getHeaderHeightFunc != null)
             {
-                return _getHeaderHeightFunc.Invoke(_dataSource, section);
+                return _getHeaderHeightFunc.Invoke(DataSource, section);
             }
 
             return HeightForHeader ?? 0;
@@ -116,7 +116,7 @@ namespace Softeq.XToolkit.Bindings.iOS
         {
             if (_getFooterHeightFunc != null)
             {
-                return _getFooterHeightFunc.Invoke(_dataSource, section);
+                return _getFooterHeightFunc.Invoke(DataSource, section);
             }
 
             return HeightForFooter ?? 0;
@@ -124,7 +124,7 @@ namespace Softeq.XToolkit.Bindings.iOS
 
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
-            var item = _dataSource[indexPath.Section];
+            var item = DataSource[indexPath.Section];
             _rowSelectedAction?.Invoke(item, indexPath);
         }
 
