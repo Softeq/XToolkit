@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Foundation;
 using Plugin.Permissions;
 using UIKit;
+using UserNotifications;
 
 namespace Softeq.XToolkit.Permissions.iOS
 {
@@ -13,6 +14,11 @@ namespace Softeq.XToolkit.Permissions.iOS
     {
         public async Task<PermissionStatus> RequestPermissionsAsync(Permission permission)
         {
+            if (permission == Permission.Notifications)
+            {
+                return await RequestNotificationPermissionAsync().ConfigureAwait(false);
+            }
+            
             var pluginPermission = ToPluginPermission(permission);
             var result = await CrossPermissions.Current.RequestPermissionsAsync(pluginPermission);
             return result.TryGetValue(pluginPermission, out var permissionStatus) 
@@ -37,6 +43,14 @@ namespace Softeq.XToolkit.Permissions.iOS
             {
                 UIApplication.SharedApplication.BeginInvokeOnMainThread(() => { CrossPermissions.Current.OpenAppSettings(); });
             }
+        }
+
+        private static async Task<PermissionStatus> RequestNotificationPermissionAsync()
+        {
+            var notificationCenter = UNUserNotificationCenter.Current;
+            var result = await notificationCenter.RequestAuthorizationAsync(
+                UNAuthorizationOptions.Alert | UNAuthorizationOptions.Sound);
+            return result.Item1 ? PermissionStatus.Granted : PermissionStatus.Denied;
         }
 
         private PermissionStatus ToPermissionStatus(Plugin.Permissions.Abstractions.PermissionStatus permissionStatus)
@@ -66,8 +80,8 @@ namespace Softeq.XToolkit.Permissions.iOS
                     return Plugin.Permissions.Abstractions.Permission.Camera;
                 case Permission.Storage:
                     return Plugin.Permissions.Abstractions.Permission.Storage;
-                case Permission.MediaLibrary:
-                    return Plugin.Permissions.Abstractions.Permission.MediaLibrary;
+                case Permission.Photos:
+                    return Plugin.Permissions.Abstractions.Permission.Photos;
                 default:
                     throw new NotImplementedException();
             }
@@ -79,8 +93,8 @@ namespace Softeq.XToolkit.Permissions.iOS
             {
                 case Plugin.Permissions.Abstractions.Permission.Camera:
                     return Permission.Camera;
-                case Plugin.Permissions.Abstractions.Permission.MediaLibrary:
-                    return Permission.MediaLibrary;
+                case Plugin.Permissions.Abstractions.Permission.Photos:
+                    return Permission.Photos;
                 case Plugin.Permissions.Abstractions.Permission.Storage:
                     return Permission.Storage;
                 default:

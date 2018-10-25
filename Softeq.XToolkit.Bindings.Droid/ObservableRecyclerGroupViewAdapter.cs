@@ -19,7 +19,7 @@ namespace Softeq.XToolkit.Bindings.Droid
         private ObservableKeyGroupsCollection<TKey, TItem> _items;
         private Func<ViewGroup, int, RecyclerView.ViewHolder> _getHolderFunc;
         private Func<ViewGroup, int, RecyclerView.ViewHolder> _getHeaderHolderFunc;
-        private Action<RecyclerView.ViewHolder, int, TItem> _bindViewHolderAction;
+        private Action<RecyclerView.ViewHolder, int, TItem, bool> _bindViewHolderAction;
         private Action<RecyclerView.ViewHolder, int, TKey> _bindHeaderViewHolderAction;
         private IDisposable _subscription;
 
@@ -27,7 +27,7 @@ namespace Softeq.XToolkit.Bindings.Droid
             ObservableKeyGroupsCollection<TKey, TItem> items,
             Func<ViewGroup, int, RecyclerView.ViewHolder> getHolderFunc,
             Func<ViewGroup, int, RecyclerView.ViewHolder> getHeaderHolderFunc,
-            Action<RecyclerView.ViewHolder, int, TItem> bindViewHolderAction,
+            Action<RecyclerView.ViewHolder, int, TItem, bool> bindViewHolderAction,
             Action<RecyclerView.ViewHolder, int, TKey> bindHeaderViewHolderAction)
         {
             _plainItems = new List<AdapterItem<TKey, TItem>>();
@@ -57,7 +57,15 @@ namespace Softeq.XToolkit.Bindings.Droid
             }
             else
             {
-                _bindViewHolderAction(holder, position, item.Item);
+                var isLast = true;
+                var nextPosition = position + 1;
+                if (nextPosition > 0 && nextPosition < _plainItems.Count)
+                {
+                    var nextItem = _plainItems[nextPosition];
+                    isLast = nextItem.IsHeader;
+                }
+
+                _bindViewHolderAction(holder, position, item.Item, isLast);
             }
         }
 
@@ -122,28 +130,28 @@ namespace Softeq.XToolkit.Bindings.Droid
             }
         }
 
-        private class AdapterItem<TKey, TItem>
+        private class AdapterItem<TK, TI>
         {
-            public static AdapterItem<TKey, TItem> CreateFromKey(TKey key)
+            public static AdapterItem<TK, TI> CreateFromKey(TK key)
             {
-                return new AdapterItem<TKey, TItem>
+                return new AdapterItem<TK, TI>
                 {
                     IsHeader = true,
                     Key = key
                 };
             }
 
-            public static AdapterItem<TKey, TItem> CreateFromValue(TItem item)
+            public static AdapterItem<TK, TI> CreateFromValue(TI item)
             {
-                return new AdapterItem<TKey, TItem>
+                return new AdapterItem<TK, TI>
                 {
                     Item = item
                 };
             }
 
-            public TKey Key { get; private set; }
+            public TK Key { get; private set; }
 
-            public TItem Item { get; private set; }
+            public TI Item { get; private set; }
 
             public bool IsHeader { get; private set; }
         }

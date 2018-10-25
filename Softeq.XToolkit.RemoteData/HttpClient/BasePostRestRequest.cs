@@ -9,12 +9,13 @@ namespace Softeq.XToolkit.RemoteData.HttpClient
 {
     public abstract class BasePostRestRequest<T> : BaseRestRequest
     {
-        private readonly T _dto;
         private readonly IJsonSerializer _jsonSerializer;
 
+        protected readonly T Dto;
+        
         protected BasePostRestRequest(IJsonSerializer jsonSerializer, T dto)
         {
-            _dto = dto;
+            Dto = dto;
             _jsonSerializer = jsonSerializer;
         }
 
@@ -22,7 +23,7 @@ namespace Softeq.XToolkit.RemoteData.HttpClient
 
         public override HttpContent GetContent()
         {
-            var content = _jsonSerializer.Serialize(_dto);
+            var content = _jsonSerializer.Serialize(Dto);
             return new StringContent(content, Encoding.UTF8, HttpConsts.ApplicationJsonHeaderValue);
         }
     }

@@ -7,5 +7,6 @@ namespace Softeq.XToolkit.RemoteData
     {
         public const string ApplicationJsonHeaderValue = "application/json";
         public const string Bearer = "Bearer";
+        public static string Accept = "Accept";
     }
 }

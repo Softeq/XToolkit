@@ -13,13 +13,13 @@ namespace Softeq.XToolkit.Auth
 {
     public class RefreshTokenService : RefreshTokenServiceBase
     {
-        private readonly AccountService _accountService;
+        private readonly IAccountService _accountService;
         private readonly AuthConfig _authConfig;
         private readonly ILogger _logger;
 
         public RefreshTokenService(
             ILogManager logManager,
-            AccountService accountService,
+            IAccountService accountService,
             AuthConfig authConfig)
         {
             _logger = logManager.GetLogger<RefreshTokenService>();
@@ -63,7 +63,7 @@ namespace Softeq.XToolkit.Auth
             {
                 try
                 {
-                    _accountService.ResetTokens(loginResult);
+                    _accountService.ResetTokens(loginResult.AccessToken, loginResult.RefreshToken);
                     _logger.Info("Access token saved");
                 }
                 catch (Exception)

@@ -14,6 +14,19 @@ namespace Softeq.XToolkit.Common.iOS.Helpers
         {
             return new NSMutableAttributedString(inputString);
         }
+        
+        public static NSAttributedString BuildAttributedStringFromHtml(this string inputString)
+        {
+            var importParams = new NSAttributedStringDocumentAttributes
+            {
+                DocumentType = NSDocumentType.HTML,
+                
+            };
+
+            NSError error = new NSError();
+
+            return new NSAttributedString(inputString, importParams, ref error);
+        }
 
         public static NSMutableAttributedString Font(this NSMutableAttributedString self, UIFont font)
         {

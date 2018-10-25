@@ -29,8 +29,10 @@ namespace Softeq.XToolkit.RemoteData.HttpClient
             Logger = logManager.GetLogger(GetType().ToString());
         }
 
-        protected abstract string ApiUrl { get; }
+        public abstract string ApiUrl { get; }
+        
         protected abstract bool IsAuthorized { get; }
+        
         protected abstract string AccessToken { get; }
 
         public virtual async Task<string> SendAndGetResponseAsync(BaseRestRequest request)

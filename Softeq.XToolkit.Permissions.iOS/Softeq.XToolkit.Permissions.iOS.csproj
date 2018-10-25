@@ -52,6 +52,7 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PermissionsManager.cs" />
     <Compile Include="PermissionsService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -61,8 +62,12 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
+      <Project>{b4208549-9b41-4eb2-9f80-8e60d75e6bfa}</Project>
+      <Name>Softeq.XToolkit.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Softeq.XToolkit.Permissions\Softeq.XToolkit.Permissions.csproj">
-      <Project>{2e23511b-836d-4614-9b7f-547fef22d665}</Project>
+      <Project>{424EABDC-DCC0-4616-B603-93582D9A9AD4}</Project>
       <Name>Softeq.XToolkit.Permissions</Name>
     </ProjectReference>
   </ItemGroup>
