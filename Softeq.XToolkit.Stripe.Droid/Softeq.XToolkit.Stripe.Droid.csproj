@@ -59,7 +59,7 @@
       <Name>Softeq.XToolkit.Common.Droid</Name>
     </ProjectReference>
     <ProjectReference Include="..\Softeq.XToolkit.Stripe\Softeq.XToolkit.Stripe.csproj">
-      <Project>{6B7555D8-3819-48A6-AD09-BC8B0013BD5E}</Project>
+      <Project>{E08C674D-C9AA-4E39-A109-DB56C2489210}</Project>
       <Name>Softeq.XToolkit.Stripe</Name>
     </ProjectReference>
     <ProjectReference Include="..\Softeq.XToolkit.RemoteData\Softeq.XToolkit.RemoteData.csproj">

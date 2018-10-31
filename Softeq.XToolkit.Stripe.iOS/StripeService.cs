@@ -4,15 +4,16 @@
 using System;
 using Foundation;
 using Softeq.XToolkit.Common.Interfaces;
-using Softeq.XToolkit.Common.iOS.Extensions;
 using Softeq.XToolkit.RemoteData.HttpClient;
 using StripeSdk;
+using UIKit;
 
 namespace Softeq.XToolkit.Stripe.iOS
 {
     public class StripeService : IStripeService
     {
         private readonly IJsonSerializer _jsonSerializer;
+        private readonly Func<UIViewController> _getUiViewControllerFunc;
         private readonly ILogManager _logManager;
         private readonly IMessageHub _messageHub;
         private readonly IRestHttpClient _restHttpClient;
@@ -23,12 +24,13 @@ namespace Softeq.XToolkit.Stripe.iOS
             IRestHttpClient restHttpClient,
             ILogManager logManager,
             IMessageHub messageHub,
-            IJsonSerializer jsonSerializer)
+            IJsonSerializer jsonSerializer, Func<UIViewController> getUiViewControllerFunc)
         {
             _restHttpClient = restHttpClient;
             _logManager = logManager;
             _messageHub = messageHub;
             _jsonSerializer = jsonSerializer;
+            _getUiViewControllerFunc = getUiViewControllerFunc;
         }
 
         public void Initialize(StripeConfig stripeConfig)
@@ -53,7 +55,7 @@ namespace Softeq.XToolkit.Stripe.iOS
                 STPPaymentConfiguration.SharedConfiguration(),
                 STPTheme.DefaultTheme)
             {
-                HostViewController = UIViewControllerExtensions.TopViewController,
+                HostViewController = _getUiViewControllerFunc(),
                 Delegate = new PaymentDelegate(_messageHub, stripeRemoteService)
             };
         }
@@ -101,7 +103,7 @@ namespace Softeq.XToolkit.Stripe.iOS
             public override async void PaymentContext(STPPaymentContext paymentContext, STPPaymentResult paymentResult,
                 STPErrorBlock completion)
             {
-                var result = await _stripeRemoteService.RequestPaymentAsync((int) paymentContext.PaymentAmount,
+                var result = await _stripeRemoteService.RequestPaymentAsync((int)paymentContext.PaymentAmount,
                     paymentResult.Source.StripeID, paymentContext.PaymentCurrency, "test_ios");
                 completion(result ? null : new NSError());
             }
@@ -141,7 +143,7 @@ namespace Softeq.XToolkit.Stripe.iOS
                 try
                 {
                     var nsData = NSData.FromString(result);
-                    nsDictionary = (NSDictionary) NSJsonSerialization.Deserialize(
+                    nsDictionary = (NSDictionary)NSJsonSerialization.Deserialize(
                         nsData,
                         NSJsonReadingOptions.MutableContainers,
                         out nsError);
