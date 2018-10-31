@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{45666951-B87E-4CE0-861A-A9B6A3DD37A1}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Softeq.XToolkit.Stripe.iOS</RootNamespace>
+    <AssemblyName>Softeq.XToolkit.Stripe.iOS</AssemblyName>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchDebug>true</MtouchDebug>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <MtouchFastDev>true</MtouchFastDev>
+    <IOSDebuggerPort>63592</IOSDebuggerPort>
+    <DeviceSpecificBuild>false</DeviceSpecificBuild>
+    <MtouchVerbosity>
+    </MtouchVerbosity>
+    <MtouchLink>
+    </MtouchLink>
+    <MtouchHttpClientHandler>
+    </MtouchHttpClientHandler>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchVerbosity>
+    </MtouchVerbosity>
+    <MtouchHttpClientHandler>
+    </MtouchHttpClientHandler>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Naxam.Stripe.iOS">
+      <Version>12.1.2</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.iOS" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StripeService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Softeq.XToolkit.Common.iOS\Softeq.XToolkit.Common.iOS.csproj">
+      <Project>{6bcb2009-2e46-458c-bcaa-afc27a631924}</Project>
+      <Name>Softeq.XToolkit.Common.iOS</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
+    </ProjectReference>
+    <ProjectReference Include="..\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
+      <Project>{857902A3-313D-4A7A-ABAA-96CADD8E8B5E}</Project>
+      <Name>Softeq.XToolkit.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Softeq.XToolkit.RemoteData\Softeq.XToolkit.RemoteData.csproj">
+      <Project>{D978B78C-7A56-438E-ACF1-53C50A6B40FD}</Project>
+      <Name>Softeq.XToolkit.RemoteData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Softeq.XToolkit.Stripe\Softeq.XToolkit.Stripe.csproj">
+      <Project>{6B7555D8-3819-48A6-AD09-BC8B0013BD5E}</Project>
+      <Name>Softeq.XToolkit.Stripe</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+</Project>
