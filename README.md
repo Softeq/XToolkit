@@ -4,7 +4,16 @@ XToolkit is a collection of components for cross-platform mobile development wit
 
 ## Installation
 
-// WIP...
+NuGet:
+
+```
+Install-Package Softeq.XToolkit.Common
+```
+
+```
+Install-Package Softeq.XToolkit.Bindings
+```
+
 
 ## Common Library Overview
 
