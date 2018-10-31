@@ -37,6 +37,7 @@
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
     <JavaMaximumHeapSize></JavaMaximumHeapSize>
   </PropertyGroup>
+  <Import Project="..\..\Configurations.targets" />
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>

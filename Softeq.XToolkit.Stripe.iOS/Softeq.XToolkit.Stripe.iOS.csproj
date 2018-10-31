@@ -47,6 +47,7 @@
     <MtouchHttpClientHandler>
     </MtouchHttpClientHandler>
   </PropertyGroup>
+  <Import Project="..\..\Configurations.targets" />
   <ItemGroup>
     <PackageReference Include="Naxam.Stripe.iOS">
       <Version>12.1.2</Version>

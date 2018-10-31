@@ -35,6 +35,7 @@
     <AndroidManagedSymbols>true</AndroidManagedSymbols>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
   </PropertyGroup>
+  <Import Project="..\..\Configurations.targets" />
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
