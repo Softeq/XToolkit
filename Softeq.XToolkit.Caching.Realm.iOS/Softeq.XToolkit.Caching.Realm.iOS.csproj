@@ -77,7 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Softeq.XToolkit.Caching\Softeq.XToolkit.Caching.csproj">
-      <Project>{C2328ED0-88C8-424C-B210-43C64DA29718}</Project>
+      <Project>{DA131D9B-3B7B-4D65-9D25-CAAF7426F2C9}</Project>
       <Name>Softeq.XToolkit.Caching</Name>
     </ProjectReference>
   </ItemGroup>
