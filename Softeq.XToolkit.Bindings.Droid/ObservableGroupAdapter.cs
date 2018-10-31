@@ -6,6 +6,7 @@ using Android.Views;
 using Android.Widget;
 using Softeq.XToolkit.Common;
 using Softeq.XToolkit.Common.Collections;
+using Softeq.XToolkit.Common.WeakSubscription;
 using Object = Java.Lang.Object;
 
 namespace Softeq.XToolkit.Bindings.Droid
@@ -16,6 +17,7 @@ namespace Softeq.XToolkit.Bindings.Droid
         private ObservableKeyGroupsCollection<TKey, TValue> _dataSource;
         private Func<int, int, bool, View, ViewGroup, TValue, View> _getChildViewFunc;
         private Func<int, bool, View, ViewGroup, TKey, View> _getGroupViewFunc;
+        private IDisposable _subscription;
 
         public ObservableGroupAdapter(
             ObservableKeyGroupsCollection<TKey, TValue> items,
@@ -24,10 +26,10 @@ namespace Softeq.XToolkit.Bindings.Droid
             Func<int, bool, View, ViewGroup, TKey, View> getGroupViewFunc)
         {
             _dataSource = items;
-            _dataSource.CollectionChanged += OnCollectionChanged;
             _parent = WeakReferenceEx.Create(parent);
             _getChildViewFunc = getChildViewFunc;
             _getGroupViewFunc = getGroupViewFunc;
+            _subscription = new NotifyCollectionChangedEventSubscription(_dataSource, OnCollectionChanged);
         }
 
         public override int GroupCount => _dataSource.Count;
@@ -76,10 +78,11 @@ namespace Softeq.XToolkit.Bindings.Droid
             return true;
         }
 
-        protected override void JavaFinalize()
+        protected override void Dispose(bool disposing)
         {
-            base.JavaFinalize();
-            _dataSource.CollectionChanged -= OnCollectionChanged;
+            base.Dispose(disposing);
+
+            _subscription?.Dispose();
             _dataSource = null;
             _getGroupViewFunc = null;
             _getChildViewFunc = null;
@@ -88,6 +91,7 @@ namespace Softeq.XToolkit.Bindings.Droid
         private void OnCollectionChanged(object sender, EventArgs e)
         {
             NotifyDataSetChanged();
+
             for (var i = 0; i < _dataSource.Count; i++)
             {
                 _parent.Target?.ExpandGroup(i);
