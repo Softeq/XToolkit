@@ -66,11 +66,11 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
-		  <Project>{B4208549-9B41-4EB2-9F80-8E60D75E6BFA}</Project>
+		  <Project>{857902A3-313D-4A7A-ABAA-96CADD8E8B5E}</Project>
 		  <Name>Softeq.XToolkit.Common</Name>
 		</ProjectReference>
 		<ProjectReference Include="..\Softeq.XToolkit.Connectivity\Softeq.XToolkit.Connectivity.csproj">
-		  <Project>{5108E3E7-B6D6-460D-AA26-C7AFEA21AE06}</Project>
+		  <Project>{6C0776B7-23E3-4EFD-BE91-F64CC60ACB82}</Project>
 		  <Name>Softeq.XToolkit.Connectivity</Name>
 		</ProjectReference>
 	</ItemGroup>

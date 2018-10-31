@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
-      <Project>{B4208549-9B41-4EB2-9F80-8E60D75E6BFA}</Project>
+      <Project>{857902A3-313D-4A7A-ABAA-96CADD8E8B5E}</Project>
       <Name>Softeq.XToolkit.Common</Name>
     </ProjectReference>
   </ItemGroup>
