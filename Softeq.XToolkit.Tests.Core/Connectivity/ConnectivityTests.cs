@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Moq;
+using NSubstitute;
 using Plugin.Connectivity.Abstractions;
 using Softeq.XToolkit.Common;
 using Softeq.XToolkit.Common.Interfaces;
@@ -14,24 +16,22 @@ namespace Softeq.XToolkit.Tests.Core.Connectivity
 {
 	public class ConnectivityTests
 	{
-		private readonly Mock<ITimerFactory> _timeFactory;
-		private readonly Mock<ILogManager> _logManager;
-		private readonly Mock<IConnectivity> _connectivity;
-		private readonly Mock<ITimer> _timerMock;
+		private readonly ITimerFactory _timeFactory;
+		private readonly ILogManager _logManager;
+		private readonly IConnectivity _connectivity;
+		private readonly ITimer _timerMock;
 		private readonly TestBaseInternetConnectionManagerObject _internetManager;
 
 		public ConnectivityTests()
 		{
-			_timeFactory = new Mock<ITimerFactory>();
-			_logManager = new Mock<ILogManager>();
-			_connectivity = new Mock<IConnectivity>();
-			_timerMock = new Mock<ITimer>();
+			_timeFactory = Substitute.For<ITimerFactory>();
+			_logManager = Substitute.For<ILogManager>();
+			_connectivity = Substitute.For<IConnectivity>();
+			_timerMock = Substitute.For<ITimer>();
 
-			_logManager.Setup(_ => _.GetLogger<BaseInternetConnectionManager>()).Returns(() => new Mock<ILogger>().Object);
-			_timerMock.Setup(_ => _.Start()).Callback(() => { });
-			_timeFactory.Setup(_ => _.Create(It.IsAny<TaskReference>(), It.IsAny<int>())).Returns(() => _timerMock.Object);
-
-			_internetManager = new TestBaseInternetConnectionManagerObject(_logManager.Object, _connectivity.Object, _timeFactory.Object);
+			_logManager.GetLogger<BaseInternetConnectionManager>().Returns(info => Substitute.For<ILogger>());
+			_timeFactory.Create(Arg.Any<TaskReference>(), Arg.Any<int>()).Returns(info => _timerMock);
+			_internetManager = new TestBaseInternetConnectionManagerObject(_logManager, _connectivity, _timeFactory);
 		}
 
 		[Fact]
@@ -89,8 +89,14 @@ namespace Softeq.XToolkit.Tests.Core.Connectivity
 			_internetManager.StopTracking();
 
 			//assert
-			_timerMock.Verify(mock => mock.Start(), Times.Once);
-			_timerMock.Verify(mock => mock.Stop(), Times.Once);
+
+			var calledMethodNames = _timerMock.ReceivedCalls()
+				.Select(x => x.GetMethodInfo().Name)
+				.ToArray();
+
+			var expetcedCallNames = new[] { "Start", "Stop" };
+
+			Assert.True(calledMethodNames.All(x => expetcedCallNames.Contains(x)));
 		}
 
 		[Fact]
@@ -100,15 +106,19 @@ namespace Softeq.XToolkit.Tests.Core.Connectivity
 			var isNetworkSourceInvoked = false;
 			var connectionTypes = new List<ConnectionType> { ConnectionType.Bluetooth };
 
-			_internetManager.NetworkSourceChanged += (sender, e) => { isNetworkSourceInvoked = true; };
+			_internetManager.NetworkSourceChanged += (sender, e) =>
+			{
+				isNetworkSourceInvoked = true;
+			};
 
 			//act
 			_internetManager.StartTracking();
 
-			_connectivity.Raise(_ => _.ConnectivityTypeChanged += null, new ConnectivityTypeChangedEventArgs
-			{
-				ConnectionTypes = connectionTypes
-			});
+			_connectivity.ConnectivityTypeChanged += Raise.Event<ConnectivityTypeChangedEventHandler>(
+				null, new ConnectivityTypeChangedEventArgs
+				{
+					ConnectionTypes = connectionTypes
+				});
 
 			//assert
 			Assert.True(isNetworkSourceInvoked);
@@ -121,14 +131,14 @@ namespace Softeq.XToolkit.Tests.Core.Connectivity
 			var isNetworkSourceInvoked = false;
 			var connectionTypes = new List<ConnectionType> { ConnectionType.Bluetooth };
 
-			_connectivity.Setup(_ => _.ConnectionTypes).Returns(() => connectionTypes);
+			_connectivity.ConnectionTypes.Returns(info => connectionTypes);
 
 			_internetManager.NetworkSourceChanged += (sender, e) => { isNetworkSourceInvoked = true; };
 
 			//act
 			_internetManager.StartTracking();
 
-			_connectivity.Raise(_ => _.ConnectivityTypeChanged += null, new ConnectivityTypeChangedEventArgs
+			_connectivity.ConnectivityTypeChanged += Raise.Event<ConnectivityTypeChangedEventHandler>(null, new ConnectivityTypeChangedEventArgs
 			{
 				ConnectionTypes = connectionTypes
 			});
@@ -143,14 +153,17 @@ namespace Softeq.XToolkit.Tests.Core.Connectivity
 			//arrange
 			var isNetworkConnectionInvoked = false;
 
-			_internetManager.NetworkConnectionChanged += (sender, e) => { isNetworkConnectionInvoked = true; };
+			_internetManager.NetworkConnectionChanged += (sender, e) =>
+			{
+				isNetworkConnectionInvoked = true;
+			};
 
 			//act
 			_internetManager.StartTracking();
 
 			_internetManager.IsNetworkAvailable = true;
 
-			_connectivity.Raise(_ => _.ConnectivityChanged += null, new ConnectivityChangedEventArgs());
+			_connectivity.ConnectivityChanged += Raise.Event<ConnectivityChangedEventHandler>(null, new ConnectivityChangedEventArgs());
 
 			//assert
 			Assert.True(isNetworkConnectionInvoked);
@@ -167,7 +180,10 @@ namespace Softeq.XToolkit.Tests.Core.Connectivity
 			//act
 			_internetManager.StartTracking();
 
-			_connectivity.Raise(_ => _.ConnectivityChanged += null, new ConnectivityChangedEventArgs());
+			_connectivity.ConnectivityTypeChanged += Raise.Event<ConnectivityTypeChangedEventHandler>(null, new ConnectivityTypeChangedEventArgs
+			{
+				ConnectionTypes = new List<ConnectionType> { ConnectionType.Bluetooth }
+			});
 
 			//assert
 			Assert.False(isNetworkConnectionInvoked);
