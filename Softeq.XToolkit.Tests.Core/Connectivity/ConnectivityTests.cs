@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Moq;
 using NSubstitute;
 using Plugin.Connectivity.Abstractions;
 using Softeq.XToolkit.Common;
@@ -180,10 +179,7 @@ namespace Softeq.XToolkit.Tests.Core.Connectivity
 			//act
 			_internetManager.StartTracking();
 
-			_connectivity.ConnectivityTypeChanged += Raise.Event<ConnectivityTypeChangedEventHandler>(null, new ConnectivityTypeChangedEventArgs
-			{
-				ConnectionTypes = new List<ConnectionType> { ConnectionType.Bluetooth }
-			});
+			_connectivity.ConnectivityChanged += Raise.Event<ConnectivityChangedEventHandler>(null, new ConnectivityChangedEventArgs());
 
 			//assert
 			Assert.False(isNetworkConnectionInvoked);
