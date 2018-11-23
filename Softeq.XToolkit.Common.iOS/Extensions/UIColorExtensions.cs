@@ -47,7 +47,7 @@ namespace Softeq.XToolkit.Common.iOS.Extensions
             }
         }
 
-        public static string UIColorToHex(this UIColor color)
+        public static string ToHex(this UIColor color)
         {
             color.GetRGBA(out nfloat r, out nfloat g, out nfloat b, out nfloat a);
             
