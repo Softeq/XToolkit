@@ -26,12 +26,12 @@ namespace Softeq.XToolkit.Connectivity
 
 		private bool _isStarted;
 
-		protected bool IsInternetConnectionAvailable { get; private set; }
+		protected bool? IsInternetConnectionAvailable { get; private set; }
 
 		public event EventHandler<NetworkConnectionEventArgs> NetworkConnectionChanged;
 		public event EventHandler NetworkSourceChanged;
 
-		public BaseInternetConnectionManager(ILogManager manager, IConnectivity connectivity, ITimerFactory timerFactory)
+        protected BaseInternetConnectionManager(ILogManager manager, IConnectivity connectivity, ITimerFactory timerFactory)
 		{
 			_connectivityPlugin = connectivity;
 			_timerFactory = timerFactory;
@@ -110,7 +110,7 @@ namespace Softeq.XToolkit.Connectivity
 			if (IsInternetConnectionAvailable != newValue)
 			{
 				IsInternetConnectionAvailable = newValue;
-				NetworkConnectionChanged?.Invoke(this, new NetworkConnectionEventArgs(IsInternetConnectionAvailable, ConnectionTypes));
+                NetworkConnectionChanged?.Invoke(this, new NetworkConnectionEventArgs(IsInternetConnectionAvailable == true, ConnectionTypes));
 			}
 		}
 
@@ -138,7 +138,7 @@ namespace Softeq.XToolkit.Connectivity
 		{
 			if (_isStarted)
 			{
-				NetworkConnectionChanged?.Invoke(this, new NetworkConnectionEventArgs(IsInternetConnectionAvailable, ConnectionTypes));
+                NetworkConnectionChanged?.Invoke(this, new NetworkConnectionEventArgs(IsInternetConnectionAvailable == true, ConnectionTypes));
 			}
 		}
 

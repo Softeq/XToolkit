@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Plugin.Connectivity;
 using Plugin.Connectivity.Abstractions;
 using Plugin.CurrentActivity;
-using Softeq.XToolkit.Common;
 using Softeq.XToolkit.Common.Droid.Extensions;
 using Softeq.XToolkit.Common.Extensions;
 using Softeq.XToolkit.Common.Interfaces;
@@ -28,7 +27,7 @@ namespace Softeq.XToolkit.Connectivity.Droid
 
 				TryToUpdateInternetResult(state);
 
-				return IsInternetConnectionAvailable;
+                return IsInternetConnectionAvailable == true;
 			});
 		}
 
