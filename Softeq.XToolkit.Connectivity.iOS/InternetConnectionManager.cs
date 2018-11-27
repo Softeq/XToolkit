@@ -6,7 +6,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Plugin.Connectivity;
 using Plugin.Connectivity.Abstractions;
-using Softeq.XToolkit.Common;
 using Softeq.XToolkit.Common.Extensions;
 using Softeq.XToolkit.Common.Interfaces;
 
@@ -42,7 +41,7 @@ namespace Softeq.XToolkit.Connectivity.iOS
 
 				UpdateIsInternetConnectionAvailable(isHostReachable);
 
-				return IsInternetConnectionAvailable;
+                return IsInternetConnectionAvailable == true;
 			});
 		}
 
