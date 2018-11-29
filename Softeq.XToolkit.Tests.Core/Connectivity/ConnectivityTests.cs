@@ -172,9 +172,12 @@ namespace Softeq.XToolkit.Tests.Core.Connectivity
 		public void ConnectivityChangedEvent_Should_Not_Trigger_NetworkConnectionChangedEvent_If_Connection_Still_Have_Same_Status()
 		{
 			//arrange
-			var isNetworkConnectionInvoked = false;
+			var times = 0;
 
-			_internetManager.NetworkConnectionChanged += (sender, e) => { isNetworkConnectionInvoked = true; };
+			_internetManager.NetworkConnectionChanged += (sender, e) =>
+			{
+				times++;
+			};
 
 			//act
 			_internetManager.StartTracking();
@@ -182,7 +185,7 @@ namespace Softeq.XToolkit.Tests.Core.Connectivity
 			_connectivity.ConnectivityChanged += Raise.Event<ConnectivityChangedEventHandler>(null, new ConnectivityChangedEventArgs());
 
 			//assert
-			Assert.False(isNetworkConnectionInvoked);
+			Assert.True(times == 1);
 		}
 	}
 }
