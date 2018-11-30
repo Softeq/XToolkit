@@ -142,7 +142,7 @@ namespace Softeq.XToolkit.Bindings.iOS
         /// <returns>The created and initialised <see cref="UICollectionViewCell" />.</returns>
         public override UICollectionViewCell GetCell(UICollectionView collectionView, NSIndexPath indexPath)
         {
-            var cell = (TCell) collectionView.DequeueReusableCell(NsReuseId, indexPath);
+            var cell = (TCell)collectionView.DequeueReusableCell(NsReuseId, indexPath);
 
             try
             {
@@ -276,7 +276,7 @@ namespace Softeq.XToolkit.Bindings.iOS
                     "BindCell was called but no BindCellDelegate was found");
             }
 
-            BindCellDelegate((TCell) cell, (TItem) item, indexPath);
+            BindCellDelegate((TCell)cell, (TItem)item, indexPath);
         }
 
         /// <summary>
@@ -305,39 +305,39 @@ namespace Softeq.XToolkit.Bindings.iOS
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                    {
-                        var count = e.NewItems.Count;
-                        var paths = new NSIndexPath[count];
-
-                        for (var i = 0; i < count; i++)
                         {
-                            paths[i] = NSIndexPath.FromRowSection(e.NewStartingIndex + i, 0);
-                        }
+                            var count = e.NewItems.Count;
+                            var paths = new NSIndexPath[count];
 
-                        _view.InsertItems(paths);
-                    }
+                            for (var i = 0; i < count; i++)
+                            {
+                                paths[i] = NSIndexPath.FromRowSection(e.NewStartingIndex + i, 0);
+                            }
+
+                            _view.InsertItems(paths);
+                        }
                         break;
 
                     case NotifyCollectionChangedAction.Remove:
-                    {
-                        var count = e.OldItems.Count;
-                        var paths = new NSIndexPath[count];
-
-                        for (var i = 0; i < count; i++)
                         {
-                            var index = NSIndexPath.FromRowSection(e.OldStartingIndex + i, 0);
-                            paths[i] = index;
+                            var count = e.OldItems.Count;
+                            var paths = new NSIndexPath[count];
 
-                            var item = e.OldItems[i];
-
-                            if (Equals(SelectedItem, item))
+                            for (var i = 0; i < count; i++)
                             {
-                                SelectedItem = default(TItem);
-                            }
-                        }
+                                var index = NSIndexPath.FromRowSection(e.OldStartingIndex + i, 0);
+                                paths[i] = index;
 
-                        _view.DeleteItems(paths);
-                    }
+                                var item = e.OldItems[i];
+
+                                if (Equals(SelectedItem, item))
+                                {
+                                    SelectedItem = default(TItem);
+                                }
+                            }
+
+                            _view.DeleteItems(paths);
+                        }
                         break;
 
                     default:
@@ -376,7 +376,6 @@ namespace Softeq.XToolkit.Bindings.iOS
             }
 
             _view = collectionView;
-            _view.RegisterClassForCell(typeof(TCell), NsReuseId);
         }
 
         /// <summary>
