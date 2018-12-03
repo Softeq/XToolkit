@@ -119,11 +119,12 @@ namespace Softeq.XToolkit.Common.Collections
             var insertedItemsIndexes = new List<int>();
             foreach (var item in itemsList)
             {
-                int i = 0;
+                var i = 0;
                 while (i < Items.Count && comparer(Items[i], item) <= 0)
                 {
                     i++;
                 }
+
                 insertedItemsIndexes.Add(i);
                 Items.Insert(i, item);
             }
@@ -168,14 +169,14 @@ namespace Softeq.XToolkit.Common.Collections
                 return;
             }
 
-            var list = collection as List<T>;
-            var changedItems = list ?? new List<T>(collection);
+            var changedItems = collection is List<T> ? (List<T>) collection : new List<T>(collection);
+            var index = Items.IndexOf(changedItems[0]);
+            
             for (var i = 0; i < changedItems.Count; i++)
             {
                 if (!Items.Remove(changedItems[i]))
                 {
-                    changedItems
-                        .RemoveAt(i); //Can't use a foreach because changedItems is intended to be (carefully) modified
+                    changedItems.RemoveAt(i); //Can't use a foreach because changedItems is intended to be (carefully) modified
                     i--;
                 }
             }
@@ -183,7 +184,7 @@ namespace Softeq.XToolkit.Common.Collections
             OnPropertyChanged(new PropertyChangedEventArgs("Count"));
             OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
             OnCollectionChanged(
-                new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, changedItems, -1));
+                new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, changedItems, index));
         }
 
         /// <summary>

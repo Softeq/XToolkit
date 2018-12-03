@@ -12,139 +12,139 @@ using Softeq.XToolkit.Common.Interfaces;
 
 namespace Softeq.XToolkit.Connectivity
 {
-	public abstract class BaseInternetConnectionManager
-	{
-		protected ConnectivityManagerOptions Options { get; private set; }
-		protected TaskDeferral<bool> TaskDeferral;
+    public abstract class BaseInternetConnectionManager
+    {
+        protected ConnectivityManagerOptions Options { get; private set; }
+        protected TaskDeferral<bool> TaskDeferral;
 
-		protected IList<ConnectionType> ConnectionTypes;
-		protected ILogger Logger { get; }
-		protected ITimer Timer { get; private set; }
+        protected IList<ConnectionType> ConnectionTypes;
+        protected ILogger Logger { get; }
+        protected ITimer Timer { get; private set; }
 
-		private readonly IConnectivity _connectivityPlugin;
-		private readonly ITimerFactory _timerFactory;
+        private readonly IConnectivity _connectivityPlugin;
+        private readonly ITimerFactory _timerFactory;
 
-		private bool _isStarted;
+        private bool _isStarted;
 
-		protected bool IsInternetConnectionAvailable { get; private set; }
+        protected bool? IsInternetConnectionAvailable { get; private set; }
 
-		public event EventHandler<NetworkConnectionEventArgs> NetworkConnectionChanged;
-		public event EventHandler NetworkSourceChanged;
+        public event EventHandler<NetworkConnectionEventArgs> NetworkConnectionChanged;
+        public event EventHandler NetworkSourceChanged;
 
-		public BaseInternetConnectionManager(ILogManager manager, IConnectivity connectivity, ITimerFactory timerFactory)
-		{
-			_connectivityPlugin = connectivity;
-			_timerFactory = timerFactory;
+        protected BaseInternetConnectionManager(ILogManager manager, IConnectivity connectivity, ITimerFactory timerFactory)
+        {
+            _connectivityPlugin = connectivity;
+            _timerFactory = timerFactory;
 
-			TaskDeferral = new TaskDeferral<bool>();
+            TaskDeferral = new TaskDeferral<bool>();
 
-			Logger = manager.GetLogger<BaseInternetConnectionManager>();
-			SetOptions(new ConnectivityManagerOptions("www.google.com"));
-		}
+            Logger = manager.GetLogger<BaseInternetConnectionManager>();
+            SetOptions(new ConnectivityManagerOptions("www.google.com"));
+        }
 
-		public Task<bool> IsNetworkAvailableAsync()
-		{
-			return IsNetworkAvailableInternalAsync();
-		}
+        public Task<bool> IsNetworkAvailableAsync()
+        {
+            return IsNetworkAvailableInternalAsync();
+        }
 
-		public void SetOptions(ConnectivityManagerOptions options)
-		{
-			Options = options ?? throw new InvalidOperationException("Please set valid options.");
+        public void SetOptions(ConnectivityManagerOptions options)
+        {
+            Options = options ?? throw new InvalidOperationException("Please set valid options.");
 
-			Timer = _timerFactory.Create(new TaskReference(IsNetworkAvailableInternalAsync), Options.TimerInterval);
+            Timer = _timerFactory.Create(new TaskReference(IsNetworkAvailableInternalAsync), Options.TimerInterval);
 
-			TaskDeferral = new TaskDeferral<bool>();
-		}
+            TaskDeferral = new TaskDeferral<bool>();
+        }
 
-		public virtual void StartTracking()
-		{
-			if (_isStarted)
-			{
-				throw new InvalidOperationException("Tracking already started. Please stop it first.");
-			}
+        public virtual void StartTracking()
+        {
+            if (_isStarted)
+            {
+                throw new InvalidOperationException("Tracking already started. Please stop it first.");
+            }
 
-			_isStarted = true;
+            _isStarted = true;
 
-			SubscribeConnectivityTypeChanged();
+            SubscribeConnectivityTypeChanged();
 
-			ConnectionTypes = _connectivityPlugin.ConnectionTypes.ToArray();
+            ConnectionTypes = _connectivityPlugin.ConnectionTypes.ToArray();
 
-			IsNetworkAvailableInternalAsync().SafeTaskWrapper(Logger);
+            IsNetworkAvailableInternalAsync().SafeTaskWrapper(Logger);
 
-			Timer.Start();
-		}
+            Timer.Start();
+        }
 
-		public virtual void StopTracking()
-		{
-			UnsubcribeConnectivityTypeChanged();
+        public virtual void StopTracking()
+        {
+            UnsubcribeConnectivityTypeChanged();
 
-			_isStarted = false;
+            _isStarted = false;
 
-			Timer.Stop();
-		}
+            Timer.Stop();
+        }
 
-		protected abstract Task<bool> IsNetworkAvailableInternalAsync();
+        protected abstract Task<bool> IsNetworkAvailableInternalAsync();
 
-		protected void HandleConnectivityTypeChanged(object sender, ConnectivityTypeChangedEventArgs e)
-		{
-			var types = e.ConnectionTypes.ToArray();
+        protected void HandleConnectivityTypeChanged(object sender, ConnectivityTypeChangedEventArgs e)
+        {
+            var types = e.ConnectionTypes.ToArray();
 
-			bool IsNetworkStatusChanged(IList<ConnectionType> connectionTypes)
-			{
-				return ConnectionTypes.Except(connectionTypes).Any() ||
-					   connectionTypes.Except(ConnectionTypes).Any();
-			}
+            bool IsNetworkStatusChanged(IList<ConnectionType> connectionTypes)
+            {
+                return ConnectionTypes.Except(connectionTypes).Any() ||
+                       connectionTypes.Except(ConnectionTypes).Any();
+            }
 
-			if (!IsNetworkStatusChanged(types))
-			{
-				return;
-			}
+            if (!IsNetworkStatusChanged(types))
+            {
+                return;
+            }
 
-			ConnectionTypes = types;
+            ConnectionTypes = types;
 
-			InvokeNetworkSourceChangedEvent();
-		}
+            InvokeNetworkSourceChangedEvent();
+        }
 
-		protected void TryToUpdateInternetResult(bool newValue)
-		{
-			if (IsInternetConnectionAvailable != newValue)
-			{
-				IsInternetConnectionAvailable = newValue;
-				NetworkConnectionChanged?.Invoke(this, new NetworkConnectionEventArgs(IsInternetConnectionAvailable, ConnectionTypes));
-			}
-		}
+        protected void TryToUpdateInternetResult(bool newValue)
+        {
+            if (IsInternetConnectionAvailable != newValue)
+            {
+                IsInternetConnectionAvailable = newValue;
+                NetworkConnectionChanged?.Invoke(this, new NetworkConnectionEventArgs(IsInternetConnectionAvailable == true, ConnectionTypes));
+            }
+        }
 
-		protected virtual void SubscribeConnectivityTypeChanged()
-		{
-			_connectivityPlugin.ConnectivityChanged += HandleNetworkChanged;
-			_connectivityPlugin.ConnectivityTypeChanged += HandleConnectivityTypeChanged;
-		}
+        protected virtual void SubscribeConnectivityTypeChanged()
+        {
+            _connectivityPlugin.ConnectivityChanged += HandleNetworkChanged;
+            _connectivityPlugin.ConnectivityTypeChanged += HandleConnectivityTypeChanged;
+        }
 
-		protected virtual void UnsubcribeConnectivityTypeChanged()
-		{
-			_connectivityPlugin.ConnectivityChanged -= HandleNetworkChanged;
-			_connectivityPlugin.ConnectivityTypeChanged -= HandleConnectivityTypeChanged;
-		}
+        protected virtual void UnsubcribeConnectivityTypeChanged()
+        {
+            _connectivityPlugin.ConnectivityChanged -= HandleNetworkChanged;
+            _connectivityPlugin.ConnectivityTypeChanged -= HandleConnectivityTypeChanged;
+        }
 
-		protected void InvokeNetworkSourceChangedEvent()
-		{
-			if (_isStarted)
-			{
-				NetworkSourceChanged?.Invoke(this, EventArgs.Empty);
-			}
-		}
+        protected void InvokeNetworkSourceChangedEvent()
+        {
+            if (_isStarted)
+            {
+                NetworkSourceChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
 
-		protected void InvokeNetworkConnectionChangedEvent()
-		{
-			if (_isStarted)
-			{
-				NetworkConnectionChanged?.Invoke(this, new NetworkConnectionEventArgs(IsInternetConnectionAvailable, ConnectionTypes));
-			}
-		}
+        protected void InvokeNetworkConnectionChangedEvent()
+        {
+            if (_isStarted)
+            {
+                NetworkConnectionChanged?.Invoke(this, new NetworkConnectionEventArgs(IsInternetConnectionAvailable == true, ConnectionTypes));
+            }
+        }
 
-		private async void HandleNetworkChanged(object sender, EventArgs args)
-		{
-			await IsNetworkAvailableInternalAsync().ConfigureAwait(false);
-		}
-	}
+        private async void HandleNetworkChanged(object sender, EventArgs args)
+        {
+            await IsNetworkAvailableInternalAsync().ConfigureAwait(false);
+        }
+    }
 }
