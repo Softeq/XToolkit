@@ -42,6 +42,12 @@ namespace Softeq.XToolkit.Connectivity
             SetOptions(new ConnectivityManagerOptions("www.google.com"));
         }
 
+        public void Restart()
+        {
+            StopTracking();
+            StartTracking();
+        }
+
         public Task<bool> IsNetworkAvailableAsync()
         {
             return IsNetworkAvailableInternalAsync();
