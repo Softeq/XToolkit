@@ -10,4 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="*Undefined*Tools\RealmWeaver.Fody.dll" />
+  </ItemGroup>
 </Project>
