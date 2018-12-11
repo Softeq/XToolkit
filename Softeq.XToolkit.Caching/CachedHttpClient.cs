@@ -44,7 +44,7 @@ namespace Softeq.XToolkit.Caching
 
             if (!ignoreCache && response.StatusCode == HttpStatusCode.NotModified)
             {
-                return await _localCache.GetFromCache(request.EndpointUrl).ConfigureAwait(false);
+                return await _localCache.Get<string>(request.EndpointUrl).ConfigureAwait(false);
             }
 
             var stringResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -55,7 +55,7 @@ namespace Softeq.XToolkit.Caching
                 if (lastModified.HasValue)
                 {
                     await _localCache
-                        .SaveToCache(request.EndpointUrl, lastModified.Value, stringResponse)
+                        .Add(request.EndpointUrl, lastModified.Value, stringResponse)
                         .ConfigureAwait(false);
                 }
             }
@@ -98,7 +98,7 @@ namespace Softeq.XToolkit.Caching
                     httpClient.DefaultRequestHeaders.Accept.Clear();
                     httpClient.DefaultRequestHeaders.Accept.Add(
                         new MediaTypeWithQualityHeaderValue(HttpConsts.ApplicationJsonHeaderValue));
-                    httpClient.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue {NoCache = true};
+                    httpClient.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true };
 
                     HttpResponseMessage response = null;
 
@@ -133,7 +133,7 @@ namespace Softeq.XToolkit.Caching
                             if (request.Method == HttpMethod.Get && !ignoreCache)
                             {
                                 var timeStamp = await _localCache
-                                    .GetTimeStampForKey(request.EndpointUrl)
+                                    .GetExpiration(request.EndpointUrl)
                                     .ConfigureAwait(false);
 
                                 httpRequest.Headers.IfModifiedSince = timeStamp;
