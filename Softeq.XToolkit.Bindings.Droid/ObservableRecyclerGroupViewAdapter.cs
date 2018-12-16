@@ -48,6 +48,12 @@ namespace Softeq.XToolkit.Bindings.Droid
             return _plainItems.IndexOf(headerItem);
         }
 
+        public TItem GetItem(int position)
+        {
+            var item = _plainItems[position];
+            return item.Item;
+        }
+
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             var item = _plainItems[position];
