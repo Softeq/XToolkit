@@ -132,6 +132,11 @@ namespace Softeq.XToolkit.Common.Collections
             Comparison<TKey> keyComparison = null,
             Func<TValue, TKey> keySelector = null)
         {
+            if (listItem.Count == 0)
+            {
+                return; 
+            }
+
             AddRangeToGroupsSorted(listItem, x => x, valueComparison, keyComparison, keySelector);
         }
 

@@ -3,7 +3,7 @@
 
 using Realms;
 
-namespace Softeq.XToolkit.Caching.Realm.Droid
+namespace Softeq.XToolkit.Caching.Realm
 {
     internal class LocalData : RealmObject
     {

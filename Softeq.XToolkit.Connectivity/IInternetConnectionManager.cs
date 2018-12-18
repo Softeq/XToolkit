@@ -17,5 +17,6 @@ namespace Softeq.XToolkit.Connectivity
 
         void StartTracking();
         void StopTracking();
+        void Restart();
     }
 }
