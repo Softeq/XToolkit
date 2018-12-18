@@ -26,7 +26,7 @@ namespace Softeq.XToolkit.Common.Files
         {
             return Task.Run(() =>
             {
-                var fileStream = File.OpenWrite(path);
+                var fileStream = File.Open(path, FileMode.Create);
                 return (Stream)fileStream;
             });
         }

@@ -65,6 +65,7 @@ namespace Softeq.XToolkit.Permissions.Droid
                 case Permission.Camera:
                     return Plugin.Permissions.Abstractions.Permission.Camera;
                 case Permission.Photos:
+                case Permission.Storage:
                     return Plugin.Permissions.Abstractions.Permission.Storage;
                 default:
                     throw new NotImplementedException();
