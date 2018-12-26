@@ -6,7 +6,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Windows.Input;
 using Android.Widget;
-using Softeq.XToolkit.Common.Command;
 
 namespace Softeq.XToolkit.Bindings.Droid
 {
@@ -105,7 +104,7 @@ namespace Softeq.XToolkit.Bindings.Droid
         }
 
         public Delegate GetCommandHandler<T>(EventInfo info, string eventName, Type elementType,
-            RelayCommand<T> command,
+            ICommand command,
             Binding<T, T> castedBinding)
         {
             Delegate result;
@@ -135,9 +134,9 @@ namespace Softeq.XToolkit.Bindings.Droid
             return result;
         }
 
-        public Delegate GetCommandHandler<T>(EventInfo info, string eventName, Type elementType,
-            RelayCommand<T> command,
-            T commandParameter)
+        public Delegate GetCommandHandler(EventInfo info, string eventName, Type elementType,
+            ICommand command,
+            object commandParameter)
         {
             Delegate result;
 
@@ -157,13 +156,13 @@ namespace Softeq.XToolkit.Bindings.Droid
             return result;
         }
 
-        public Delegate GetCommandHandlerWithArgs<T>(
+        public Delegate GetCommandHandlerWithArgs(
             EventInfo e,
             string eventName,
             Type t,
-            RelayCommand<T> command)
+            ICommand command)
         {
-            EventHandler<T> handler = (s, args) => command.Execute(args);
+            EventHandler handler = (s, args) => command.Execute(args);
             return handler;
         }
 
