@@ -34,9 +34,6 @@
   </PropertyGroup>
   <Import Project="..\..\Configurations.targets" />
   <ItemGroup>
-    <Reference Include="Softeq.XToolkit.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\..\..\Library\Developer\CoreSimulator\Devices\A246CF84-12E6-4E12-9CE0-614E8076D85B\data\Containers\Bundle\Application\FDFF9A5F-FC39-43F4-BC7C-6FBA04A99BF4\ChatSample.iOS.app\Softeq.XToolkit.Common.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -57,11 +54,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Softeq.XToolkit.Bindings\Softeq.XToolkit.Bindings.csproj">
-      <Project>{1D4552C9-ECCF-4D9F-98AD-E537042588E1}</Project>
+      <Project>{6CC4B55D-2EA0-4883-BF2A-BBEBC80150AF}</Project>
       <Name>Softeq.XToolkit.Bindings</Name>
     </ProjectReference>
     <ProjectReference Include="..\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
-      <Project>{857902A3-313D-4A7A-ABAA-96CADD8E8B5E}</Project>
+      <Project>{21503153-9566-4789-9B5A-73F2BA71AA51}</Project>
       <Name>Softeq.XToolkit.Common</Name>
     </ProjectReference>
   </ItemGroup>
