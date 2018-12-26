@@ -4,7 +4,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using System.Windows.Input;
 
 namespace Softeq.XToolkit.Common.Command
 {
@@ -21,7 +20,7 @@ namespace Softeq.XToolkit.Common.Command
     ///     This will enable (or restore) the CommandManager class which handles
     ///     automatic enabling/disabling of controls based on the CanExecute delegate.
     /// </remarks>
-    public class RelayCommand<T> : ICommand
+    public class RelayCommand<T> : ICommand<T>
     {
         private readonly WeakFunc<T, bool> _canExecute;
         private readonly WeakAction<T> _execute;
@@ -97,7 +96,7 @@ namespace Softeq.XToolkit.Common.Command
 
                 if (parameter == null || parameter is T)
                 {
-                    return _canExecute.Execute((T) parameter);
+                    return _canExecute.Execute((T)parameter);
                 }
             }
 
@@ -128,13 +127,13 @@ namespace Softeq.XToolkit.Common.Command
                     else
                     {
                         // ReSharper disable ExpressionIsAlwaysNull
-                        _execute.Execute((T) val);
+                        _execute.Execute((T)val);
                         // ReSharper restore ExpressionIsAlwaysNull
                     }
                 }
                 else
                 {
-                    _execute.Execute((T) val);
+                    _execute.Execute((T)val);
                 }
             }
         }

@@ -5,6 +5,7 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Windows.Input;
+using Softeq.XToolkit.Common.Command;
 using UIKit;
 
 namespace Softeq.XToolkit.Bindings.iOS
@@ -108,9 +109,9 @@ namespace Softeq.XToolkit.Bindings.iOS
             return handler;
         }
 
-        public Delegate GetCommandHandlerWithArgs(EventInfo e, string eventName, Type t, ICommand command)
+        public Delegate GetCommandHandlerWithArgs<T>(EventInfo e, string eventName, Type t, ICommand<T> command)
         {
-            EventHandler handler = (s, args) => command.Execute(args);
+            EventHandler<T> handler = (s, args) => command.Execute(args);
             return handler;
         }
 

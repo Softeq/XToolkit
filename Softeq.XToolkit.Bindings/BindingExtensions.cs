@@ -5,6 +5,7 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Windows.Input;
+using Softeq.XToolkit.Common.Command;
 
 namespace Softeq.XToolkit.Bindings
 {
@@ -341,7 +342,7 @@ namespace Softeq.XToolkit.Bindings
             var t = element.GetType();
             var e = t.GetEventInfoForControl(eventName);
 
-            var castedBinding = (Binding<T, T>) commandParameterBinding;
+            var castedBinding = (Binding<T, T>)commandParameterBinding;
 
             //var handler = e.GetCommandHandler(eventName, t, command, castedBinding);
             var handler = _bindingFactory.GetCommandHandler(e, eventName, t, command, castedBinding);
@@ -389,7 +390,7 @@ namespace Softeq.XToolkit.Bindings
             ICommand command,
             Binding commandParameterBinding)
         {
-            var castedBinding = (Binding<T, T>) commandParameterBinding;
+            var castedBinding = (Binding<T, T>)commandParameterBinding;
 
             var t = element.GetType();
             var e = t.GetEventInfoForControl(eventName);
@@ -620,15 +621,15 @@ namespace Softeq.XToolkit.Bindings
             SetCommand<T, TEventArgs>(element, string.Empty, command, commandParameter);
         }
 
-        public static void SetCommandWithArgs(
+        public static void SetCommandWithArgs<T>(
             this object element,
             string eventName,
-            ICommand command)
+            ICommand<T> command)
         {
             var t = element.GetType();
             var e = t.GetEventInfoForControl(eventName);
 
-            var handler = _bindingFactory.GetCommandHandlerWithArgs(e, eventName, t, command);
+            Delegate handler = _bindingFactory.GetCommandHandlerWithArgs(e, eventName, t, command);
 
             e.AddEventHandler(
                 element,

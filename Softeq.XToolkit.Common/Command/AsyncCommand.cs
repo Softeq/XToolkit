@@ -57,7 +57,7 @@ namespace Softeq.XToolkit.Common.Command
         }
     }
 
-    public class AsyncCommand<T> : AsyncCommandBase
+    public class AsyncCommand<T> : AsyncCommandBase, ICommand<T>
     {
         private readonly Func<T, Task> _action;
 
@@ -68,7 +68,7 @@ namespace Softeq.XToolkit.Common.Command
 
         protected override Func<Task> ExecuteAsync(object parameter)
         {
-            return () => _action((T) parameter);
+            return () => _action((T)parameter);
         }
     }
 }
