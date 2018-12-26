@@ -12,7 +12,6 @@
 		<LangVersion>7</LangVersion>
 	</PropertyGroup>
 	<ItemGroup>
-		<Folder Include="Command" />
 		<Folder Include="Models\" />
 		<Folder Include="Interfaces\" />
 		<Folder Include="WeakSubscription\" />
