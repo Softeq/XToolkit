@@ -18,7 +18,4 @@
 		<Folder Include="Files\" />
 		<Folder Include="Exceptions\" />
 	</ItemGroup>
-	<ItemGroup>
-	  <None Remove="Command\ICommand.config" />
-	</ItemGroup>
 </Project>
