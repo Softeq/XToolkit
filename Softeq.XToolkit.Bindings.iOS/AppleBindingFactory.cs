@@ -86,7 +86,7 @@ namespace Softeq.XToolkit.Bindings.iOS
         }
 
         public Delegate GetCommandHandler<T>(EventInfo info, string eventName, Type elementType,
-            RelayCommand<T> command,
+            ICommand command,
             Binding<T, T> castedBinding)
         {
             // At the moment, all supported controls with default events
@@ -99,9 +99,9 @@ namespace Softeq.XToolkit.Bindings.iOS
             return handler;
         }
 
-        public Delegate GetCommandHandler<T>(EventInfo info, string eventName, Type elementType,
-            RelayCommand<T> command,
-            T commandParameter)
+        public Delegate GetCommandHandler(EventInfo info, string eventName, Type elementType,
+            ICommand command,
+            object commandParameter)
         {
             // At the moment, all supported controls with default events
             // in iOS are using EventHandler, and not EventHandler<...>.
@@ -109,7 +109,7 @@ namespace Softeq.XToolkit.Bindings.iOS
             return handler;
         }
 
-        public Delegate GetCommandHandlerWithArgs<T>(EventInfo e, string eventName, Type t, RelayCommand<T> command)
+        public Delegate GetCommandHandlerWithArgs<T>(EventInfo e, string eventName, Type t, ICommand<T> command)
         {
             EventHandler<T> handler = (s, args) => command.Execute(args);
             return handler;

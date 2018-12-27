@@ -105,7 +105,7 @@ namespace Softeq.XToolkit.Bindings.Droid
         }
 
         public Delegate GetCommandHandler<T>(EventInfo info, string eventName, Type elementType,
-            RelayCommand<T> command,
+            ICommand command,
             Binding<T, T> castedBinding)
         {
             Delegate result;
@@ -136,8 +136,8 @@ namespace Softeq.XToolkit.Bindings.Droid
         }
 
         public Delegate GetCommandHandler<T>(EventInfo info, string eventName, Type elementType,
-            RelayCommand<T> command,
-            T commandParameter)
+            ICommand command,
+            object commandParameter)
         {
             Delegate result;
 
@@ -161,7 +161,7 @@ namespace Softeq.XToolkit.Bindings.Droid
             EventInfo e,
             string eventName,
             Type t,
-            RelayCommand<T> command)
+            ICommand<T> command)
         {
             EventHandler<T> handler = (s, args) => command.Execute(args);
             return handler;

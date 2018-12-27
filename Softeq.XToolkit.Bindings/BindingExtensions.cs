@@ -336,13 +336,13 @@ namespace Softeq.XToolkit.Bindings
         public static void SetCommand<T>(
             this object element,
             string eventName,
-            RelayCommand<T> command,
+            ICommand command,
             Binding commandParameterBinding)
         {
             var t = element.GetType();
             var e = t.GetEventInfoForControl(eventName);
 
-            var castedBinding = (Binding<T, T>) commandParameterBinding;
+            var castedBinding = (Binding<T, T>)commandParameterBinding;
 
             //var handler = e.GetCommandHandler(eventName, t, command, castedBinding);
             var handler = _bindingFactory.GetCommandHandler(e, eventName, t, command, castedBinding);
@@ -387,10 +387,10 @@ namespace Softeq.XToolkit.Bindings
         public static void SetCommand<T, TEventArgs>(
             this object element,
             string eventName,
-            RelayCommand<T> command,
+            ICommand command,
             Binding commandParameterBinding)
         {
-            var castedBinding = (Binding<T, T>) commandParameterBinding;
+            var castedBinding = (Binding<T, T>)commandParameterBinding;
 
             var t = element.GetType();
             var e = t.GetEventInfoForControl(eventName);
@@ -512,7 +512,7 @@ namespace Softeq.XToolkit.Bindings
         public static void SetCommand<T>(
             this object element,
             string eventName,
-            RelayCommand<T> command,
+            ICommand command,
             T commandParameter)
         {
             var t = element.GetType();
@@ -552,7 +552,7 @@ namespace Softeq.XToolkit.Bindings
         public static void SetCommand<T, TEventArgs>(
             this object element,
             string eventName,
-            RelayCommand<T> command,
+            ICommand command,
             T commandParameter)
         {
             var t = element.GetType();
@@ -577,7 +577,7 @@ namespace Softeq.XToolkit.Bindings
 
         public static void SetCommand<T>(
             this object element,
-            RelayCommand<T> command,
+            ICommand command,
             Binding commandParameterBinding)
         {
             SetCommand(element, string.Empty, command, commandParameterBinding);
@@ -585,7 +585,7 @@ namespace Softeq.XToolkit.Bindings
 
         public static void SetCommand<T, TEventArgs>(
             this object element,
-            RelayCommand<T> command,
+            ICommand command,
             Binding commandParameterBinding)
         {
             SetCommand<T, TEventArgs>(element, string.Empty, command, commandParameterBinding);
@@ -607,7 +607,7 @@ namespace Softeq.XToolkit.Bindings
 
         public static void SetCommand<T>(
             this object element,
-            RelayCommand<T> command,
+            ICommand command,
             T commandParameter)
         {
             SetCommand(element, string.Empty, command, commandParameter);
@@ -615,7 +615,7 @@ namespace Softeq.XToolkit.Bindings
 
         public static void SetCommand<T, TEventArgs>(
             this object element,
-            RelayCommand<T> command,
+            ICommand command,
             T commandParameter)
         {
             SetCommand<T, TEventArgs>(element, string.Empty, command, commandParameter);
@@ -624,7 +624,7 @@ namespace Softeq.XToolkit.Bindings
         public static void SetCommandWithArgs<T>(
             this object element,
             string eventName,
-            RelayCommand<T> command)
+            ICommand<T> command)
         {
             var t = element.GetType();
             var e = t.GetEventInfoForControl(eventName);

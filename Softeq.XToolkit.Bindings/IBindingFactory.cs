@@ -48,21 +48,21 @@ namespace Softeq.XToolkit.Bindings
             EventInfo info,
             string eventName,
             Type elementType,
-            RelayCommand<T> command,
+            ICommand command,
             Binding<T, T> castedBinding);
 
-        Delegate GetCommandHandler<T>(
+        Delegate GetCommandHandler(
             EventInfo info,
             string eventName,
             Type elementType,
-            RelayCommand<T> command,
-            T commandParameter);
+            ICommand command,
+            object commandParameter);
 
         Delegate GetCommandHandlerWithArgs<T>(
             EventInfo e,
             string eventName,
             Type t,
-            RelayCommand<T> command);
+            ICommand<T> command);
 
         string GetDefaultEventNameForControl(Type type);
     }
