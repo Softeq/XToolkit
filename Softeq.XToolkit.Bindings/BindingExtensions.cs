@@ -629,7 +629,7 @@ namespace Softeq.XToolkit.Bindings
             var t = element.GetType();
             var e = t.GetEventInfoForControl(eventName);
 
-            Delegate handler = _bindingFactory.GetCommandHandlerWithArgs(e, eventName, t, command);
+            var handler = _bindingFactory.GetCommandHandlerWithArgs(e, eventName, t, command);
 
             e.AddEventHandler(
                 element,
