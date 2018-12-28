@@ -50,7 +50,7 @@ namespace Softeq.XToolkit.Permissions.iOS
         {
             if (!IsPermissionsRequested)
             {
-                var isConfirmed = await _permissionsDialogService.ComfirmPermissionAsync(Permission.Notifications).ConfigureAwait(false);
+                var isConfirmed = await _permissionsDialogService.ConfirmPermissionAsync(Permission.Notifications).ConfigureAwait(false);
                 if (!isConfirmed)
                 {
                     return PermissionStatus.Denied;
@@ -81,7 +81,7 @@ namespace Softeq.XToolkit.Permissions.iOS
                 return permissionStatus;
             }
 
-            var confirmationResult = await _permissionsDialogService.ComfirmPermissionAsync(permission).ConfigureAwait(false);
+            var confirmationResult = await _permissionsDialogService.ConfirmPermissionAsync(permission).ConfigureAwait(false);
             if (confirmationResult)
             {
                 permissionStatus = await _permissionsService.RequestPermissionsAsync(permission).ConfigureAwait(false);
