@@ -135,7 +135,7 @@ namespace Softeq.XToolkit.Bindings.Droid
             return result;
         }
 
-        public Delegate GetCommandHandler<T>(EventInfo info, string eventName, Type elementType,
+        public Delegate GetCommandHandler(EventInfo info, string eventName, Type elementType,
             ICommand command,
             object commandParameter)
         {
