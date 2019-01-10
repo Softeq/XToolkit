@@ -8,6 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Softeq.XToolkit.Common;
+using Softeq.XToolkit.Common.Interfaces;
 
 namespace Softeq.XToolkit.Bindings
 {
@@ -45,6 +46,7 @@ namespace Softeq.XToolkit.Bindings
         private PropertyInfo _targetProperty;
         protected WeakReference PropertySource;
         protected WeakReference PropertyTarget;
+        private IConverter<TTarget, TSource> _valueConverter;
 
         /// <summary>
         ///     Initializes a new instance of the Binding class for which the source and target properties
@@ -264,6 +266,21 @@ namespace Softeq.XToolkit.Bindings
         public Binding<TSource, TTarget> ConvertTargetToSource(Func<TTarget, TSource> convertBack)
         {
             _converter.SetConvertBack(convertBack);
+            return this;
+        }
+
+        public Binding SetConverter(IConverter<TTarget, TSource> converter)
+        {
+            if (converter == null)
+            {
+                return this;
+            }
+
+            _valueConverter = converter;
+
+            ConvertSourceToTarget(x => _valueConverter.ConvertValue(x));
+            ConvertTargetToSource(x => _valueConverter.ConvertValueBack(x));
+
             return this;
         }
 
