@@ -34,6 +34,12 @@ namespace Softeq.XToolkit.Common.iOS.Helpers
             return self;
         }
 
+        public static NSMutableAttributedString Underline(this NSMutableAttributedString self, NSUnderlineStyle underlineStyle = NSUnderlineStyle.Single)
+        {
+            self.AddAttribute(UIStringAttributeKey.UnderlineStyle, NSNumber.FromInt32((int)underlineStyle), new NSRange(0, self.Length));
+            return self;
+        }
+
         public static NSMutableAttributedString Foreground(this NSMutableAttributedString self, UIColor color,
             NSRange? range = null)
         {
