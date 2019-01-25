@@ -15,7 +15,7 @@ namespace Softeq.XToolkit.Common.iOS.Helpers
             return new NSMutableAttributedString(inputString);
         }
         
-        public static NSAttributedString BuildAttributedStringFromHtml(this string inputString)
+        public static NSMutableAttributedString BuildAttributedStringFromHtml(this string inputString)
         {
             var importParams = new NSAttributedStringDocumentAttributes
             {
@@ -25,7 +25,8 @@ namespace Softeq.XToolkit.Common.iOS.Helpers
 
             NSError error = new NSError();
 
-            return new NSAttributedString(inputString, importParams, ref error);
+            var attributedString = new NSAttributedString(inputString, importParams, ref error);
+            return new NSMutableAttributedString(attributedString);
         }
 
         public static NSMutableAttributedString Font(this NSMutableAttributedString self, UIFont font)
