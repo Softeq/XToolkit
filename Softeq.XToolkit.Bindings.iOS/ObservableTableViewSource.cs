@@ -48,6 +48,11 @@ namespace Softeq.XToolkit.Bindings.iOS
             DeleteAnimation = UITableViewRowAnimation.Automatic;
         }
 
+        public ObservableTableViewSource(IList<TItem> items) : base()
+        {
+            DataSource = items;
+        }
+
         /// <summary>
         ///     When set, specifies which animation should be used when rows are added.
         /// </summary>
