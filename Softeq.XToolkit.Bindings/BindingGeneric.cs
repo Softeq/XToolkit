@@ -49,7 +49,8 @@ namespace Softeq.XToolkit.Bindings
         protected WeakReference PropertyTarget;
         private IConverter<TTarget, TSource> _valueConverter;
         private WeakAction<TSource> _onSourceUpdateWithParameter;
-        private Func<TSource> _sourcePropertyFunc;
+        private readonly Func<TSource> _sourcePropertyFunc;
+        private WeakFunc<TSource, Task> _sourceUpdateFunctionWithParameter;
 
         /// <summary>
         ///     Initializes a new instance of the Binding class for which the source and target properties
@@ -229,7 +230,7 @@ namespace Softeq.XToolkit.Bindings
 
                 var type = PropertySource.Target.GetType();
                 var property = type.GetRuntimeProperty(_sourcePropertyName);
-                return (TTarget)property.GetValue(PropertySource.Target, null);
+                return (TTarget) property.GetValue(PropertySource.Target, null);
             }
         }
 
@@ -835,9 +836,14 @@ namespace Softeq.XToolkit.Bindings
             return this;
         }
 
-        public Binding<TSource, TTarget> WhenSourceChanges(Func<TSource, Task> callback)
+        public Binding<TSource, TTarget> WhenSourceChanges(Func<TSource, Task> func)
         {
-            return WhenSourceChanges(new Action<TSource>(async source => await callback.Invoke(source).ConfigureAwait(false)));
+            _sourceUpdateFunctionWithParameter = new WeakFunc<TSource, Task>(func);
+
+            return WhenSourceChanges(source =>
+            {
+                _sourceUpdateFunctionWithParameter.Execute(_sourcePropertyFunc.Invoke());
+            });
         }
 
         protected abstract Binding<TSource, TTarget> CheckControlSource();
@@ -1266,7 +1272,7 @@ namespace Softeq.XToolkit.Bindings
                 return default(TTarget);
             }
 
-            var sourceValue = (TSource)_sourceProperty.GetValue(PropertySource.Target, null);
+            var sourceValue = (TSource) _sourceProperty.GetValue(PropertySource.Target, null);
 
             try
             {
@@ -1279,14 +1285,14 @@ namespace Softeq.XToolkit.Bindings
                     return _converter.Convert(FallbackValue);
                 }
 
-                var targetValue = (TTarget)_targetProperty.GetValue(PropertyTarget.Target, null);
+                var targetValue = (TTarget) _targetProperty.GetValue(PropertyTarget.Target, null);
                 return targetValue;
             }
         }
 
         private TSource GetTargetValue()
         {
-            var targetValue = (TTarget)_targetProperty.GetValue(PropertyTarget.Target, null);
+            var targetValue = (TTarget) _targetProperty.GetValue(PropertyTarget.Target, null);
 
             try
             {
@@ -1294,7 +1300,7 @@ namespace Softeq.XToolkit.Bindings
             }
             catch (Exception)
             {
-                var sourceValue = (TSource)_sourceProperty.GetValue(PropertySource.Target, null);
+                var sourceValue = (TSource) _sourceProperty.GetValue(PropertySource.Target, null);
                 return sourceValue;
             }
         }
@@ -1364,7 +1370,7 @@ namespace Softeq.XToolkit.Bindings
                 return true;
             }
 
-            var sourceValue = (TSource)_sourceProperty.GetValue(PropertySource.Target, null);
+            var sourceValue = (TSource) _sourceProperty.GetValue(PropertySource.Target, null);
             return Equals(default(TSource), sourceValue);
         }
 
@@ -1441,7 +1447,7 @@ namespace Softeq.XToolkit.Bindings
                     && _bindingReference.IsAlive
                     && _bindingReference.Target != null)
                 {
-                    var binding = (Binding<TSource, TTarget>)_bindingReference.Target;
+                    var binding = (Binding<TSource, TTarget>) _bindingReference.Target;
 
                     binding.Detach();
 
@@ -1489,7 +1495,7 @@ namespace Softeq.XToolkit.Bindings
                     && _bindingReference.IsAlive
                     && _bindingReference.Target != null)
                 {
-                    var binding = (Binding<TSource, TTarget>)_bindingReference.Target;
+                    var binding = (Binding<TSource, TTarget>) _bindingReference.Target;
 
                     if (_updateFromSourceToTarget)
                     {
@@ -1548,7 +1554,7 @@ namespace Softeq.XToolkit.Bindings
 
                 try
                 {
-                    return (TTarget)System.Convert.ChangeType(value, typeof(TTarget));
+                    return (TTarget) System.Convert.ChangeType(value, typeof(TTarget));
                 }
                 catch (Exception)
                 {
@@ -1566,7 +1572,7 @@ namespace Softeq.XToolkit.Bindings
 
                 try
                 {
-                    return (TSource)System.Convert.ChangeType(value, typeof(TSource));
+                    return (TSource) System.Convert.ChangeType(value, typeof(TSource));
                 }
                 catch (Exception)
                 {
