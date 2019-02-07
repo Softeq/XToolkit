@@ -41,7 +41,7 @@ namespace Softeq.XToolkit.Permissions.Droid
                 return permissionStatus;
             }
 
-            var confirmationResult = await _permissionsDialogService.ComfirmPermissionAsync(permission).ConfigureAwait(false);
+            var confirmationResult = await _permissionsDialogService.ConfirmPermissionAsync(permission).ConfigureAwait(false);
             if (confirmationResult)
             {
                 permissionStatus = await _permissionsService.RequestPermissionsAsync(permission).ConfigureAwait(false);
