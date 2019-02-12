@@ -48,7 +48,7 @@ namespace Softeq.XToolkit.Bindings.iOS
             DeleteAnimation = UITableViewRowAnimation.Automatic;
         }
 
-        public ObservableTableViewSource(IList<TItem> items) : base()
+        public ObservableTableViewSource(IList<TItem> items) : this()
         {
             DataSource = items;
         }
