@@ -39,6 +39,7 @@ namespace Softeq.XToolkit.Common.Extensions
 
         public static Task SafeTaskWrapper(this Task task, ILogger logger = null)
         {
+            //todo PL: implement default logger
             task.ContinueWith(t => { LogException(t, logger); }, CancellationToken.None,
                 TaskContinuationOptions.NotOnRanToCompletion, TaskScheduler.Default);
             return task;
