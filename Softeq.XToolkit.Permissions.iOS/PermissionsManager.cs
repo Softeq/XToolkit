@@ -1,7 +1,4 @@
-﻿// Developed by Softeq Development Corporation
-// http://www.softeq.com
-
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Softeq.XToolkit.Common.Interfaces;
 
 namespace Softeq.XToolkit.Permissions.iOS
@@ -14,18 +11,18 @@ namespace Softeq.XToolkit.Permissions.iOS
 
         public PermissionsManager(
             IPermissionsService permissionsService,
-            IPermissionsDialogService permissionsDialogService, 
+            IPermissionsDialogService permissionsDialogService,
             IInternalSettings internalSettings)
         {
             _permissionsService = permissionsService;
             _permissionsDialogService = permissionsDialogService;
             _internalSettings = internalSettings;
         }
-        
+
         public Task<PermissionStatus> CheckWithRequestAsync(Permission permission)
         {
-            return permission == Permission.Notifications 
-                ? NotificationsCheckWithRequestAsync() 
+            return permission == Permission.Notifications
+                ? NotificationsCheckWithRequestAsync()
                 : CommonCheckWithRequestAsync(permission);
         }
 
@@ -39,7 +36,9 @@ namespace Softeq.XToolkit.Permissions.iOS
             _permissionsService.OpenSettings();
         }
 
-        private readonly string _isPermissionsRequestedKey = $"{nameof(PermissionsManager)}_{nameof(IsPermissionsRequested)}";
+        private readonly string _isPermissionsRequestedKey =
+            $"{nameof(PermissionsManager)}_{nameof(IsPermissionsRequested)}";
+
         private bool IsPermissionsRequested
         {
             get => _internalSettings.GetValueOrDefault(_isPermissionsRequestedKey, default(bool));
@@ -50,24 +49,22 @@ namespace Softeq.XToolkit.Permissions.iOS
         {
             if (!IsPermissionsRequested)
             {
-                var isConfirmed = await _permissionsDialogService.ConfirmPermissionAsync(Permission.Notifications).ConfigureAwait(false);
+                var isConfirmed = await _permissionsDialogService.ConfirmPermissionAsync(Permission.Notifications)
+                    .ConfigureAwait(false);
                 if (!isConfirmed)
                 {
                     return PermissionStatus.Denied;
                 }
-                
+
                 IsPermissionsRequested = true;
             }
 
-            var permissionStatus = await _permissionsService.RequestPermissionsAsync(Permission.Notifications).ConfigureAwait(false);
+            var permissionStatus = await _permissionsService.RequestPermissionsAsync(Permission.Notifications)
+                .ConfigureAwait(false);
             if (permissionStatus != PermissionStatus.Granted)
             {
-                var openSettingsConfirmed = await _permissionsDialogService.ComfirmOpenSettingsForPermissionAsync(Permission.Notifications).ConfigureAwait(false);
-                if (openSettingsConfirmed)
-                {
-                    OpenSettings();
-                    return PermissionStatus.Unknown;
-                }
+                permissionStatus =
+                    await OpenSettingsWithConfirmationAsync(Permission.Notifications).ConfigureAwait(false);
             }
 
             return permissionStatus;
@@ -81,13 +78,35 @@ namespace Softeq.XToolkit.Permissions.iOS
                 return permissionStatus;
             }
 
-            var confirmationResult = await _permissionsDialogService.ConfirmPermissionAsync(permission).ConfigureAwait(false);
-            if (confirmationResult)
+            if (permissionStatus == PermissionStatus.Denied)
             {
-                permissionStatus = await _permissionsService.RequestPermissionsAsync(permission).ConfigureAwait(false);
+                await OpenSettingsWithConfirmationAsync(permission).ConfigureAwait(false);
+            }
+
+            if (permissionStatus == PermissionStatus.Unknown)
+            {
+                var confirmationResult =
+                    await _permissionsDialogService.ConfirmPermissionAsync(permission).ConfigureAwait(false);
+                if (confirmationResult)
+                {
+                    permissionStatus =
+                        await _permissionsService.RequestPermissionsAsync(permission).ConfigureAwait(false);
+                }
             }
 
             return permissionStatus;
+        }
+
+        private async Task<PermissionStatus> OpenSettingsWithConfirmationAsync(Permission permission)
+        {
+            var openSettingsConfirmed = await _permissionsDialogService
+                .ConfirmOpenSettingsForPermissionAsync(permission).ConfigureAwait(false);
+            if (openSettingsConfirmed)
+            {
+                OpenSettings();
+            }
+
+            return PermissionStatus.Unknown;
         }
     }
 }

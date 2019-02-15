@@ -8,6 +8,6 @@ namespace Softeq.XToolkit.Permissions
     public interface IPermissionsDialogService
     {
         Task<bool> ConfirmPermissionAsync(Permission permission);
-        Task<bool> ComfirmOpenSettingsForPermissionAsync(Permission permission);
+        Task<bool> ConfirmOpenSettingsForPermissionAsync(Permission permission);
     }
 }

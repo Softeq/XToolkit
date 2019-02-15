@@ -457,6 +457,11 @@ namespace Softeq.XToolkit.Bindings
             }
         }
 
+        public static void SetCommand(this object element, string eventName, Action action)
+        {
+            SetCommand(element, eventName, new RelayCommand(action));
+        }
+
         /// <summary>
         ///     Sets a non-generic RelayCommand to an object and actuates the command when a specific event is raised. This method
         ///     should be used when the event uses an EventHandler&lt;TEventArgs&gt;.
