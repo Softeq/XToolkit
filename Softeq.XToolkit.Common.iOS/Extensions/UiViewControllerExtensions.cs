@@ -27,7 +27,7 @@ namespace Softeq.XToolkit.Common.iOS.Extensions
             controller.NavigationItem.BackBarButtonItem =
                 new UIBarButtonItem(title, UIBarButtonItemStyle.Plain, null);
         }
-        
+
         public static void AddAsSubviewWithParentSize(this UIView view, UIView parent)
         {
             view.TranslatesAutoresizingMaskIntoConstraints = false;
@@ -40,13 +40,23 @@ namespace Softeq.XToolkit.Common.iOS.Extensions
 
             NSLayoutConstraint.ActivateConstraints(new[] {right, left, top, bottom});
         }
-        
+
         public static void AddAsChildWithConstraints(this UIViewController child, UIViewController parent,
             UIView targetView = null)
         {
             parent.AddChildViewController(child);
             child.View.AddAsSubviewWithParentSize(targetView ?? parent.View);
             child.DidMoveToParentViewController(parent);
+        }
+
+        public static void SetParentSize(this UIView view)
+        {
+            var right = view.RightAnchor.ConstraintEqualTo(view.Superview.RightAnchor);
+            var left = view.LeftAnchor.ConstraintEqualTo(view.Superview.LeftAnchor);
+            var top = view.TopAnchor.ConstraintEqualTo(view.Superview.TopAnchor);
+            var bottom = view.BottomAnchor.ConstraintEqualTo(view.Superview.BottomAnchor);
+
+            NSLayoutConstraint.ActivateConstraints(new[] {right, left, top, bottom});
         }
     }
 }
