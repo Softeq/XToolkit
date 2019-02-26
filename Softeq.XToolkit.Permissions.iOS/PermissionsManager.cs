@@ -31,9 +31,16 @@ namespace Softeq.XToolkit.Permissions.iOS
             return _permissionsService.CheckPermissionsAsync(permission);
         }
 
-        public void OpenSettings()
+        private void OpenSettings(Permission permission)
         {
-            _permissionsService.OpenSettings();
+            if (permission == Permission.Bluetooth)
+            {
+                _permissionsService.RequestPermissionsAsync(Permission.Bluetooth);
+            }
+            else
+            {
+                _permissionsService.OpenSettings();
+            }
         }
 
         private readonly string _isPermissionsRequestedKey =
@@ -103,7 +110,7 @@ namespace Softeq.XToolkit.Permissions.iOS
                 .ConfirmOpenSettingsForPermissionAsync(permission).ConfigureAwait(false);
             if (openSettingsConfirmed)
             {
-                OpenSettings();
+                OpenSettings(permission);
             }
 
             return PermissionStatus.Unknown;
