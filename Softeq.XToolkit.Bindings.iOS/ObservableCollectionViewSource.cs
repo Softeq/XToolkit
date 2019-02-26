@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using Foundation;
+using Softeq.XToolkit.Common.EventArguments;
 using UIKit;
 
 namespace Softeq.XToolkit.Bindings.iOS
@@ -39,6 +40,8 @@ namespace Softeq.XToolkit.Bindings.iOS
         private NSString _reuseId;
         private TItem _selectedItem;
         private UICollectionView _view;
+
+        public event EventHandler<GenericEventArgs<TItem>> ItemClicked;
 
         /// <summary>
         ///     Creates and initializes a new instance of <see cref="ObservableCollectionViewSource{TItem, TCell}" />
@@ -245,6 +248,7 @@ namespace Softeq.XToolkit.Bindings.iOS
         {
             var item = _dataSource[indexPath.Row];
             SelectedItem = item;
+            ItemClicked?.Invoke(this, new GenericEventArgs<TItem>(item));
         }
 
         /// <summary>
