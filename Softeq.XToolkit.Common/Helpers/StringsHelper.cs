@@ -28,17 +28,15 @@ namespace Softeq.XToolkit.Common.Helpers
             return Regex.Replace(input, @"[\r\n]*^\s*$[\r\n]*", "", RegexOptions.Multiline);
         }
 
-        public static double? ParseDouble(this string text)
+        public static bool TryParseDouble(this string text, out double? result)
         {
-            if (string.IsNullOrEmpty(text))
+            if (double.TryParse(text, NumberStyles.Number, CultureInfo.CurrentCulture, out var number))
             {
-                return null;
+                result = number;
+                return true;
             }
-            else if (double.TryParse(text, NumberStyles.Number, CultureInfo.CurrentCulture, out var newWeight) && newWeight >= 0)
-            {
-                return newWeight;
-            }
-            throw new InvalidCastException($"This string cannot be parsed to double: {text}");
+            result = null;
+            return string.IsNullOrEmpty(text);
         }
     }
 }
