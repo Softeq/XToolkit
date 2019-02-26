@@ -14,12 +14,15 @@ namespace Softeq.XToolkit.Permissions.iOS
 {
     public class PermissionsService : IPermissionsService
     {
+#if DEBUG || RELEASE_WITH_BLE
         private readonly CBCentralManager _bleManager;
-
+#endif
         public PermissionsService()
         {
+#if DEBUG || RELEASE_WITH_BLE
             _bleManager = new CBCentralManager(new CustomCBCentralManagerDelegate(), DispatchQueue.MainQueue,
                 new CBCentralInitOptions {ShowPowerAlert = false});
+#endif
         }
 
         public async Task<PermissionStatus> RequestPermissionsAsync(Permission permission)
@@ -87,10 +90,11 @@ namespace Softeq.XToolkit.Permissions.iOS
 
         private Task<PermissionStatus> RequestBluetoothPermissionAsync()
         {
+#if DEBUG || RELEASE_WITH_BLE
             //creates manager and create alert
             var manager = new CBCentralManager(new CustomCBCentralManagerDelegate(), DispatchQueue.MainQueue,
                 new CBCentralInitOptions {ShowPowerAlert = true});
-
+#endif
             var taskSource = new TaskCompletionSource<PermissionStatus>();
 
             if (_bleManager.State == CBCentralManagerState.PoweredOn)
@@ -106,7 +110,7 @@ namespace Softeq.XToolkit.Permissions.iOS
 
                 while (UIApplication.SharedApplication.ApplicationState == UIApplicationState.Inactive)
                 {
-                    //wait until dialog closed, application alwayes in inactive state
+                    //wait until dialog closed, application always in inactive state
                     await Task.Delay(100);
                 }
 
