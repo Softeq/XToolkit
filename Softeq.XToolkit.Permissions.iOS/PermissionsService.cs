@@ -101,12 +101,12 @@ namespace Softeq.XToolkit.Permissions.iOS
 
             UIApplication.SharedApplication.InvokeOnMainThread(async () =>
             {
-                //Waiting untill system dialog will be shown
+                //Waiting until system dialog will be shown
                 await Task.Delay(500);
 
                 while (UIApplication.SharedApplication.ApplicationState == UIApplicationState.Inactive)
                 {
-                    //wait untill dialog closed, application alwayes in inactive state
+                    //wait until dialog closed, application alwayes in inactive state
                     await Task.Delay(100);
                 }
 
@@ -157,21 +157,6 @@ namespace Softeq.XToolkit.Permissions.iOS
                     return Plugin.Permissions.Abstractions.Permission.Storage;
                 case Permission.Photos:
                     return Plugin.Permissions.Abstractions.Permission.Photos;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        private static Permission ToPermission(Plugin.Permissions.Abstractions.Permission permission)
-        {
-            switch (permission)
-            {
-                case Plugin.Permissions.Abstractions.Permission.Camera:
-                    return Permission.Camera;
-                case Plugin.Permissions.Abstractions.Permission.Photos:
-                    return Permission.Photos;
-                case Plugin.Permissions.Abstractions.Permission.Storage:
-                    return Permission.Storage;
                 default:
                     throw new NotImplementedException();
             }
