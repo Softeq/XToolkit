@@ -56,6 +56,7 @@
     <Compile Include="PermissionsManager.cs" />
     <Compile Include="PermissionsService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CustomCBCentralManagerDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Plugin.Permissions">
@@ -64,11 +65,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
-      <Project>{b4208549-9b41-4eb2-9f80-8e60d75e6bfa}</Project>
+      <Project>{B776744C-4A23-48FF-A177-7A0ED4AD76C5}</Project>
       <Name>Softeq.XToolkit.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Softeq.XToolkit.Permissions\Softeq.XToolkit.Permissions.csproj">
-      <Project>{424EABDC-DCC0-4616-B603-93582D9A9AD4}</Project>
+      <Project>{76517B8B-160F-4116-8153-28D78EA11324}</Project>
       <Name>Softeq.XToolkit.Permissions</Name>
     </ProjectReference>
   </ItemGroup>

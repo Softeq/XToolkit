@@ -5,8 +5,8 @@ namespace Softeq.XToolkit.Permissions
 {
     public enum PermissionStatus
     {
+        Unknown,
         Granted,
-        Denied,
-        Unknown
+        Denied
     }
 }

@@ -3,6 +3,8 @@
 
 using System;
 using System.Threading.Tasks;
+using CoreBluetooth;
+using CoreFoundation;
 using Foundation;
 using Plugin.Permissions;
 using UIKit;
@@ -10,24 +12,43 @@ using UserNotifications;
 
 namespace Softeq.XToolkit.Permissions.iOS
 {
-    public class PermissionsService : IPermissionsService
+    public partial class PermissionsService : IPermissionsService
     {
+        private CBCentralManager _bleManager;
+        private CBCentralManager _bleManagerWithAlert;
+
+        public PermissionsService()
+        {
+            _bleManager = new CBCentralManager(new CustomCBCentralManagerDelegate(), DispatchQueue.MainQueue,
+                new CBCentralInitOptions { ShowPowerAlert = false });
+        }
+
         public async Task<PermissionStatus> RequestPermissionsAsync(Permission permission)
         {
             if (permission == Permission.Notifications)
             {
                 return await RequestNotificationPermissionAsync().ConfigureAwait(false);
             }
-            
+
+            if (permission == Permission.Bluetooth)
+            {
+                return await RequestBluetoothPermissionAsync();
+            }
+
             var pluginPermission = ToPluginPermission(permission);
             var result = await CrossPermissions.Current.RequestPermissionsAsync(pluginPermission);
-            return result.TryGetValue(pluginPermission, out var permissionStatus) 
-                ? ToPermissionStatus(permissionStatus) 
+            return result.TryGetValue(pluginPermission, out var permissionStatus)
+                ? ToPermissionStatus(permissionStatus)
                 : PermissionStatus.Unknown;
         }
 
         public async Task<PermissionStatus> CheckPermissionsAsync(Permission permission)
         {
+            if (permission == Permission.Bluetooth)
+            {
+                return CheckBluetoothPermission();
+            }
+
             var result = await CrossPermissions.Current
                 .CheckPermissionStatusAsync(ToPluginPermission(permission)).ConfigureAwait(false);
             return ToPermissionStatus(result);
@@ -41,8 +62,62 @@ namespace Softeq.XToolkit.Permissions.iOS
             }
             else
             {
-                UIApplication.SharedApplication.BeginInvokeOnMainThread(() => { CrossPermissions.Current.OpenAppSettings(); });
+                UIApplication.SharedApplication.BeginInvokeOnMainThread(() =>
+                {
+                    CrossPermissions.Current.OpenAppSettings();
+                });
             }
+        }
+
+        private PermissionStatus CheckBluetoothPermission()
+        {
+            var result = PermissionStatus.Unknown;
+
+            if (_bleManager.State == CBCentralManagerState.PoweredOn)
+            {
+                result = PermissionStatus.Granted;
+            }
+
+            if (_bleManager.State == CBCentralManagerState.PoweredOff)
+            {
+                result = PermissionStatus.Denied;
+            }
+
+            return result;
+        }
+
+        private Task<PermissionStatus> RequestBluetoothPermissionAsync()
+        {
+            _bleManagerWithAlert = new CBCentralManager(new CustomCBCentralManagerDelegate(), DispatchQueue.MainQueue,
+                new CBCentralInitOptions { ShowPowerAlert = true });
+
+            var taskSource = new TaskCompletionSource<PermissionStatus>();
+
+            if (_bleManager.State == CBCentralManagerState.PoweredOn)
+            {
+                taskSource.SetResult(PermissionStatus.Granted);
+                return taskSource.Task;
+            }
+
+            UIApplication.SharedApplication.InvokeOnMainThread(async () =>
+            {
+                //Waiting untill system dialog will be shown
+                await Task.Delay(500);
+
+                while (UIApplication.SharedApplication.ApplicationState == UIApplicationState.Inactive)
+                {
+                    //wait untill dialog closed, application alwayes in inactive state
+                    await Task.Delay(100);
+                }
+
+                //if user click OK button
+                if (UIApplication.SharedApplication.ApplicationState == UIApplicationState.Active)
+                {
+                    taskSource.SetResult(CheckBluetoothPermission());
+                }
+            });
+
+            return taskSource.Task;
         }
 
         private static async Task<PermissionStatus> RequestNotificationPermissionAsync()
@@ -86,7 +161,7 @@ namespace Softeq.XToolkit.Permissions.iOS
                     throw new NotImplementedException();
             }
         }
-        
+
         private static Permission ToPermission(Plugin.Permissions.Abstractions.Permission permission)
         {
             switch (permission)
