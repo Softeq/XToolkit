@@ -12,15 +12,14 @@ using UserNotifications;
 
 namespace Softeq.XToolkit.Permissions.iOS
 {
-    public partial class PermissionsService : IPermissionsService
+    public class PermissionsService : IPermissionsService
     {
-        private CBCentralManager _bleManager;
-        private CBCentralManager _bleManagerWithAlert;
+        private readonly CBCentralManager _bleManager;
 
         public PermissionsService()
         {
             _bleManager = new CBCentralManager(new CustomCBCentralManagerDelegate(), DispatchQueue.MainQueue,
-                new CBCentralInitOptions { ShowPowerAlert = false });
+                new CBCentralInitOptions {ShowPowerAlert = false});
         }
 
         public async Task<PermissionStatus> RequestPermissionsAsync(Permission permission)
@@ -88,8 +87,9 @@ namespace Softeq.XToolkit.Permissions.iOS
 
         private Task<PermissionStatus> RequestBluetoothPermissionAsync()
         {
-            _bleManagerWithAlert = new CBCentralManager(new CustomCBCentralManagerDelegate(), DispatchQueue.MainQueue,
-                new CBCentralInitOptions { ShowPowerAlert = true });
+            //creates manager and create alert
+            var manager = new CBCentralManager(new CustomCBCentralManagerDelegate(), DispatchQueue.MainQueue,
+                new CBCentralInitOptions {ShowPowerAlert = true});
 
             var taskSource = new TaskCompletionSource<PermissionStatus>();
 

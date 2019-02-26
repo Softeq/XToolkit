@@ -5,13 +5,10 @@ using CoreBluetooth;
 
 namespace Softeq.XToolkit.Permissions.iOS
 {
-    public partial class PermissionsService
+    public class CustomCBCentralManagerDelegate : CBCentralManagerDelegate
     {
-        private class CustomCBCentralManagerDelegate : CBCentralManagerDelegate
+        public override void UpdatedState(CBCentralManager central)
         {
-            public override void UpdatedState(CBCentralManager central)
-            {
-            }
         }
     }
 }
