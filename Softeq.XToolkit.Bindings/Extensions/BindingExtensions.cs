@@ -1,6 +1,3 @@
-// Developed for PAWS-HALO by Softeq Development
-// Corporation http://www.softeq.com
-
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
