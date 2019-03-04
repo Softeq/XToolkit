@@ -22,7 +22,7 @@ namespace Softeq.XToolkit.Permissions.iOS
         {
 #if DEBUG || RELEASE_WITH_BLE
             _bleManager = new CBCentralManager(new CustomCBCentralManagerDelegate(), DispatchQueue.MainQueue,
-                new CBCentralInitOptions { ShowPowerAlert = false });
+                new CBCentralInitOptions {ShowPowerAlert = false});
 #endif
         }
 
@@ -94,7 +94,7 @@ namespace Softeq.XToolkit.Permissions.iOS
 #if DEBUG || RELEASE_WITH_BLE
             _bleManagerWithAllert = new CBCentralManager(new CustomCBCentralManagerDelegate(),
                 DispatchQueue.CurrentQueue,
-                new CBCentralInitOptions { ShowPowerAlert = true });
+                new CBCentralInitOptions {ShowPowerAlert = true});
 #endif
             return PermissionStatus.Unknown;
         }
