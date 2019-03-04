@@ -324,6 +324,11 @@ namespace Softeq.XToolkit.Bindings.iOS
 
             Action act = () =>
             {
+                if (IsInfiniteScroll)
+                {
+                    _view.ReloadData();
+                    return;
+                }
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
