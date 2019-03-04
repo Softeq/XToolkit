@@ -28,9 +28,9 @@ namespace Softeq.XToolkit.Bindings.iOS
         where TCell : UICollectionViewCell
     {
         /// <summary>
-        ///     The <see cref="SelectedItem" /> property's name.
+        ///     The real count of items in a <see cref="UICollectionView" /> with infinite scroll.
         /// </summary>
-        public const string SelectedItemPropertyName = "SelectedItem";
+        public const int InfiniteItemsCount = 10000000;
 
         private readonly NSString _defaultReuseId = new NSString("C");
         private readonly Thread _mainThread;
@@ -52,11 +52,26 @@ namespace Softeq.XToolkit.Bindings.iOS
         }
 
         /// <summary>
+        ///     Creates and initializes a new instance of <see cref="ObservableCollectionViewSource{TItem, TCell}" />
+        ///     with a value for IsInfiniteScroll flag.
+        /// </summary>
+        public ObservableCollectionViewSource(bool canBeScrolledInfinitely) : this()
+        {
+            IsInfiniteScroll = canBeScrolledInfinitely;
+        }
+
+        /// <summary>
         ///     A delegate to a method taking a <see cref="UICollectionViewCell" />
         ///     and setting its elements' properties according to the item
         ///     passed as second parameter.
         /// </summary>
         public Action<TCell, TItem, NSIndexPath> BindCellDelegate { get; set; }
+
+        /// <summary>
+        ///     Indicates whether this <see cref="UICollectionViewCell" />
+        ///     can be scrolled infinitely.
+        /// </summary>
+        public bool IsInfiniteScroll { get; }
 
         /// <summary>
         ///     The data source of this list controller.
@@ -123,8 +138,8 @@ namespace Softeq.XToolkit.Bindings.iOS
                 }
 
                 _selectedItem = value;
-                RaisePropertyChanged(SelectedItemPropertyName);
-                RaiseSelectionChanged();
+                RaisePropertyChanged(nameof(SelectedItem));
+                SelectionChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -149,11 +164,9 @@ namespace Softeq.XToolkit.Bindings.iOS
 
             try
             {
-                var coll = _dataSource;
-
-                if (coll != null)
+                if (_dataSource != null)
                 {
-                    var item = coll[indexPath.Row];
+                    var item = GetItem(indexPath);
                     BindCell(cell, item, indexPath);
                 }
             }
@@ -172,7 +185,8 @@ namespace Softeq.XToolkit.Bindings.iOS
         /// <returns>The item selected by the NSIndexPath passed as parameter.</returns>
         public TItem GetItem(NSIndexPath indexPath)
         {
-            return _dataSource[indexPath.Row];
+            var index = IsInfiniteScroll ? indexPath.Row % _dataSource.Count : indexPath.Row;
+            return _dataSource[index];
         }
 
         /// <summary>
@@ -188,7 +202,11 @@ namespace Softeq.XToolkit.Bindings.iOS
         public override nint GetItemsCount(UICollectionView collectionView, nint section)
         {
             SetView(collectionView);
-            return _dataSource.Count;
+            if (_dataSource.Count == 0)
+            {
+                return 0;
+            }
+            return IsInfiniteScroll ? InfiniteItemsCount : _dataSource.Count;
         }
 
         /// <summary>
@@ -246,7 +264,7 @@ namespace Softeq.XToolkit.Bindings.iOS
         /// <param name="indexPath">The NSIndexPath pointing to the element.</param>
         public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
         {
-            var item = _dataSource[indexPath.Row];
+            var item = GetItem(indexPath);
             SelectedItem = item;
             ItemClicked?.Invoke(this, new GenericEventArgs<TItem>(item));
         }
@@ -306,6 +324,11 @@ namespace Softeq.XToolkit.Bindings.iOS
 
             Action act = () =>
             {
+                if (IsInfiniteScroll)
+                {
+                    _view.ReloadData();
+                    return;
+                }
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
@@ -360,15 +383,6 @@ namespace Softeq.XToolkit.Bindings.iOS
             {
                 NSOperationQueue.MainQueue.AddOperation(act);
                 NSOperationQueue.MainQueue.WaitUntilAllOperationsAreFinished();
-            }
-        }
-
-        private void RaiseSelectionChanged()
-        {
-            var handler = SelectionChanged;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
             }
         }
 

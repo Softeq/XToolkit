@@ -48,7 +48,7 @@ namespace Softeq.XToolkit.Bindings.iOS
             DataSource = dataSource;
             DataSource.CollectionChanged += OnCollectionChanged;
         }
-        
+
         public ObservableRangeCollection<T> DataSource { get; private set; }
 
         public nfloat? HeightForRow { get; set; }
@@ -109,7 +109,14 @@ namespace Softeq.XToolkit.Bindings.iOS
                 return _getHeaderHeightFunc.Invoke(DataSource, section);
             }
 
-            return HeightForHeader ?? 0;
+            nfloat footerHeight = 0;
+
+            if (section > 0)
+            {
+                footerHeight = GetHeightForFooter(tableView, --section);
+            }
+
+            return footerHeight + (HeightForHeader ?? 0);
         }
 
         public override nfloat GetHeightForFooter(UITableView tableView, nint section)
