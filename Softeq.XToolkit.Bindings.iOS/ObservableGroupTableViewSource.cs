@@ -1,4 +1,4 @@
-﻿// Developed by Softeq Development Corporation
+// Developed by Softeq Development Corporation
 // http://www.softeq.com
 
 using System;
@@ -109,14 +109,7 @@ namespace Softeq.XToolkit.Bindings.iOS
                 return _getHeaderHeightFunc.Invoke(DataSource, section);
             }
 
-            nfloat footerHeight = 0;
-
-            if (section > 0)
-            {
-                footerHeight = GetHeightForFooter(tableView, --section);
-            }
-
-            return footerHeight + (HeightForHeader ?? 0);
+            return HeightForHeader ?? 0;
         }
 
         public override nfloat GetHeightForFooter(UITableView tableView, nint section)
