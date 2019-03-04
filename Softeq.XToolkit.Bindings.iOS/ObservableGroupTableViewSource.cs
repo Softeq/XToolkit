@@ -1,4 +1,4 @@
-﻿// Developed by Softeq Development Corporation
+// Developed by Softeq Development Corporation
 // http://www.softeq.com
 
 using System;
@@ -48,7 +48,7 @@ namespace Softeq.XToolkit.Bindings.iOS
             DataSource = dataSource;
             DataSource.CollectionChanged += OnCollectionChanged;
         }
-        
+
         public ObservableRangeCollection<T> DataSource { get; private set; }
 
         public nfloat? HeightForRow { get; set; }
