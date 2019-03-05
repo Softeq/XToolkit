@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿// Developed by Softeq Development Corporation
+// http://www.softeq.com
+
+using System.Collections.Generic;
 using Android.Graphics;
 using Android.Text;
 using Android.Text.Style;
