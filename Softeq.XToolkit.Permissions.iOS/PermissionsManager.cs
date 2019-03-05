@@ -62,12 +62,7 @@ namespace Softeq.XToolkit.Permissions.iOS
             var permissionStatus = await _permissionsService.RequestPermissionsAsync(Permission.Notifications).ConfigureAwait(false);
             if (permissionStatus != PermissionStatus.Granted)
             {
-                var openSettingsConfirmed = await _permissionsDialogService.ComfirmOpenSettingsForPermissionAsync(Permission.Notifications).ConfigureAwait(false);
-                if (openSettingsConfirmed)
-                {
-                    OpenSettings();
-                    return PermissionStatus.Unknown;
-                }
+                permissionStatus = await OpenSettingsWithConfirmationAsync(Permission.Notifications).ConfigureAwait(false);
             }
 
             return permissionStatus;
@@ -81,13 +76,32 @@ namespace Softeq.XToolkit.Permissions.iOS
                 return permissionStatus;
             }
 
-            var confirmationResult = await _permissionsDialogService.ConfirmPermissionAsync(permission).ConfigureAwait(false);
-            if (confirmationResult)
+            if (permissionStatus == PermissionStatus.Denied)
             {
-                permissionStatus = await _permissionsService.RequestPermissionsAsync(permission).ConfigureAwait(false);
+                await OpenSettingsWithConfirmationAsync(permission).ConfigureAwait(false);
+            }
+
+            if (permissionStatus == PermissionStatus.Unknown)
+            {
+                var confirmationResult = await _permissionsDialogService.ComfirmPermissionAsync(permission).ConfigureAwait(false);
+                if (confirmationResult)
+                {
+                    permissionStatus = await _permissionsService.RequestPermissionsAsync(permission).ConfigureAwait(false);
+                }
             }
 
             return permissionStatus;
+        }
+
+        private async Task<PermissionStatus> OpenSettingsWithConfirmationAsync(Permission permission)
+        {
+            var openSettingsConfirmed = await _permissionsDialogService.ComfirmOpenSettingsForPermissionAsync(permission).ConfigureAwait(false);
+            if (openSettingsConfirmed)
+            {
+                OpenSettings();
+            }
+
+            return PermissionStatus.Unknown;
         }
     }
 }

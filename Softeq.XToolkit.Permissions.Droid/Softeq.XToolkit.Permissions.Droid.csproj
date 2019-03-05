@@ -61,6 +61,10 @@
       <Project>{424EABDC-DCC0-4616-B603-93582D9A9AD4}</Project>
       <Name>Softeq.XToolkit.Permissions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
+      <Project>{B4208549-9B41-4EB2-9F80-8E60D75E6BFA}</Project>
+      <Name>Softeq.XToolkit.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>
