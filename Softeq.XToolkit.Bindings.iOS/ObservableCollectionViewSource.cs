@@ -361,11 +361,7 @@ namespace Softeq.XToolkit.Bindings.iOS
 
         private void RaiseSelectionChanged()
         {
-            var handler = SelectionChanged;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            SelectionChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void SetView(UICollectionView collectionView)
