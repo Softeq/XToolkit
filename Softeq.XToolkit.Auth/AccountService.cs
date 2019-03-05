@@ -1,4 +1,4 @@
-﻿// Developed by Softeq Development Corporation
+// Developed by Softeq Development Corporation
 // http://www.softeq.com
 
 using Softeq.XToolkit.Common.Extensions;
@@ -31,10 +31,6 @@ namespace Softeq.XToolkit.Auth
 
         public string AccessToken => AccountInfo.AccessToken;
 
-        public bool IsProxyEnabled => AccountInfo.IsProxyEnabled;
-
-        public string ProxyAddress => AccountInfo.ProxyAddress;
-
         public string RefreshToken => AccountInfo.RefreshToken;
 
         private AccountInfo AccountInfo =>
@@ -58,13 +54,6 @@ namespace Softeq.XToolkit.Auth
             AccountInfo.UserId = modelUserId;
             AccountInfo.UserDisplayName = modelName;
             AccountInfo.UserPhotoUrl = modelThumbnailUrl;
-            AccountInfoSetting = AccountInfo;
-        }
-
-        public void SaveProxySettings(string proxyAddress, bool isProxyEnabled)
-        {
-            AccountInfo.IsProxyEnabled = isProxyEnabled;
-            AccountInfo.ProxyAddress = proxyAddress;
             AccountInfoSetting = AccountInfo;
         }
 
