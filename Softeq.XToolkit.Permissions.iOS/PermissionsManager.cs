@@ -14,18 +14,18 @@ namespace Softeq.XToolkit.Permissions.iOS
 
         public PermissionsManager(
             IPermissionsService permissionsService,
-            IPermissionsDialogService permissionsDialogService, 
+            IPermissionsDialogService permissionsDialogService,
             IInternalSettings internalSettings)
         {
             _permissionsService = permissionsService;
             _permissionsDialogService = permissionsDialogService;
             _internalSettings = internalSettings;
         }
-        
+
         public Task<PermissionStatus> CheckWithRequestAsync(Permission permission)
         {
-            return permission == Permission.Notifications 
-                ? NotificationsCheckWithRequestAsync() 
+            return permission == Permission.Notifications
+                ? NotificationsCheckWithRequestAsync()
                 : CommonCheckWithRequestAsync(permission);
         }
 
@@ -55,7 +55,7 @@ namespace Softeq.XToolkit.Permissions.iOS
                 {
                     return PermissionStatus.Denied;
                 }
-                
+
                 IsPermissionsRequested = true;
             }
 
@@ -83,7 +83,7 @@ namespace Softeq.XToolkit.Permissions.iOS
 
             if (permissionStatus == PermissionStatus.Unknown)
             {
-                var confirmationResult = await _permissionsDialogService.ComfirmPermissionAsync(permission).ConfigureAwait(false);
+                var confirmationResult = await _permissionsDialogService.ConfirmPermissionAsync(permission).ConfigureAwait(false);
                 if (confirmationResult)
                 {
                     permissionStatus = await _permissionsService.RequestPermissionsAsync(permission).ConfigureAwait(false);
