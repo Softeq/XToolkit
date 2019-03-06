@@ -9,7 +9,7 @@ using Android.Widget;
 
 namespace Softeq.XToolkit.Common.Droid.Extensions
 {
-    public static class TextViewExtentions
+    public static class TextViewExtensions
     {
         public static void HighlightStrings(this TextView textView,
             IEnumerable<(int Start, int Length)> ranges,
@@ -21,10 +21,10 @@ namespace Softeq.XToolkit.Common.Droid.Extensions
             foreach (var (Start, Length) in ranges)
             {
                 spannedString.SetSpan(
-                        new ForegroundColorSpan(color),
-                        Start,
-                        Start + Length,
-                        SpanTypes.InclusiveInclusive);
+                    new ForegroundColorSpan(color),
+                    Start,
+                    Start + Length,
+                    SpanTypes.InclusiveInclusive);
             }
 
             textView.SetText(spannedString, TextView.BufferType.Spannable);
