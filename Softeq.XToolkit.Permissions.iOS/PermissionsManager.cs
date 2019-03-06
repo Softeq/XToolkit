@@ -95,7 +95,7 @@ namespace Softeq.XToolkit.Permissions.iOS
 
         private async Task<PermissionStatus> OpenSettingsWithConfirmationAsync(Permission permission)
         {
-            var openSettingsConfirmed = await _permissionsDialogService.ComfirmOpenSettingsForPermissionAsync(permission).ConfigureAwait(false);
+            var openSettingsConfirmed = await _permissionsDialogService.ConfirmOpenSettingsForPermissionAsync(permission).ConfigureAwait(false);
             if (openSettingsConfirmed)
             {
                 OpenSettings();

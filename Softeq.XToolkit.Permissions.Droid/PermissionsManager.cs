@@ -21,7 +21,7 @@ namespace Softeq.XToolkit.Permissions.Droid
             _permissionsDialogService = permissionsDialogService;
             _internalSettings = internalSettings;
         }
-        
+
         public Task<PermissionStatus> CheckWithRequestAsync(Permission permission)
         {
             return CommonCheckWithRequestAsync(permission);
@@ -69,7 +69,7 @@ namespace Softeq.XToolkit.Permissions.Droid
 
         private async Task<PermissionStatus> OpenSettingsWithConfirmationAsync(Permission permission)
         {
-            var openSettingsConfirmed = await _permissionsDialogService.ComfirmOpenSettingsForPermissionAsync(permission).ConfigureAwait(false);
+            var openSettingsConfirmed = await _permissionsDialogService.ConfirmOpenSettingsForPermissionAsync(permission).ConfigureAwait(false);
             if (openSettingsConfirmed)
             {
                 OpenSettings();
