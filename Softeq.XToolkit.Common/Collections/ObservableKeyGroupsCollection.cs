@@ -72,6 +72,7 @@ namespace Softeq.XToolkit.Common.Collections
             }
 
             ItemsChanged?.Invoke(this, eventArgs);
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         public void AddRangeToGroups(IList<TValue> listItem, Func<TValue, TKey> selector = null)
