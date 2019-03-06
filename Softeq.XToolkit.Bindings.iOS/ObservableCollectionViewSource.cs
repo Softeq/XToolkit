@@ -30,7 +30,7 @@ namespace Softeq.XToolkit.Bindings.iOS
         /// <summary>
         ///     The real count of items in a <see cref="UICollectionView" /> with infinite scroll.
         /// </summary>
-        public const int InfiniteItemsCount = 10000000;
+        public const int InfiniteItemsCount = 100000;
 
         private readonly NSString _defaultReuseId = new NSString("C");
         private readonly Thread _mainThread;
