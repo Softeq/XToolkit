@@ -1,11 +1,8 @@
-// Developed for PAWS-HALO by Softeq Development
-// Corporation http://www.softeq.com
-
 using UIKit;
 
 namespace Softeq.XToolkit.Bindings.iOS.Gestures
 {
-    public static class MvxBehaviourExtensions
+    public static class BehaviourExtensions
     {
         public static TapGestureRecognizerBehaviour Tap(this UIView view, uint numberOfTapsRequired = 1,
             uint numberOfTouchesRequired = 1,
