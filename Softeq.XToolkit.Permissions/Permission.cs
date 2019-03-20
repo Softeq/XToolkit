@@ -8,6 +8,7 @@ namespace Softeq.XToolkit.Permissions
         Photos,
         Camera,
         Storage,
-        Notifications
+        Notifications,
+        Location
     }
 }

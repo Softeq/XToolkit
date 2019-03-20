@@ -14,8 +14,8 @@ namespace Softeq.XToolkit.Permissions.Droid
         {
             var pluginPermission = ToPluginPermission(permission);
             var result = await CrossPermissions.Current.RequestPermissionsAsync(pluginPermission);
-            return result.TryGetValue(pluginPermission, out var permissionStatus) 
-                ? ToPermissionStatus(permissionStatus) 
+            return result.TryGetValue(pluginPermission, out var permissionStatus)
+                ? ToPermissionStatus(permissionStatus)
                 : PermissionStatus.Unknown;
         }
 
@@ -66,11 +66,15 @@ namespace Softeq.XToolkit.Permissions.Droid
                     return Plugin.Permissions.Abstractions.Permission.Camera;
                 case Permission.Photos:
                     return Plugin.Permissions.Abstractions.Permission.Storage;
+                case Permission.Storage:
+                    return Plugin.Permissions.Abstractions.Permission.Storage;
+                case Permission.Location:
+                    return Plugin.Permissions.Abstractions.Permission.Location;
                 default:
                     throw new NotImplementedException();
             }
         }
-        
+
         private static Permission ToPermission(Plugin.Permissions.Abstractions.Permission permission)
         {
             switch (permission)
@@ -79,6 +83,8 @@ namespace Softeq.XToolkit.Permissions.Droid
                     return Permission.Camera;
                 case Plugin.Permissions.Abstractions.Permission.Storage:
                     return Permission.Photos;
+                case Plugin.Permissions.Abstractions.Permission.Location:
+                    return Permission.Location;
                 default:
                     throw new NotImplementedException();
             }
