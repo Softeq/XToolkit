@@ -47,7 +47,6 @@
     <Compile Include="AppleBindingExtensions.cs" />
     <Compile Include="AppleBindingFactory.cs" />
     <Compile Include="Gestures\BehaviourExtensions.cs" />
-    <Compile Include="Gestures\MvxGestureRecognizerBehavior.cs" />
     <Compile Include="Gestures\SwipeGestureRecognizerBehaviour.cs" />
     <Compile Include="Gestures\TapGestureRecognizerBehaviour.cs" />
     <Compile Include="ObservableCollectionViewSource.cs" />
@@ -55,14 +54,15 @@
     <Compile Include="ObservableTableViewController.cs" />
     <Compile Include="ObservableTableViewSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Gestures\GestureRecognizerBehavior.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Softeq.XToolkit.Bindings\Softeq.XToolkit.Bindings.csproj">
-      <Project>{6CC4B55D-2EA0-4883-BF2A-BBEBC80150AF}</Project>
+      <Project>{CC6CF7C4-AB9F-41C1-BA45-A889E8FF11F5}</Project>
       <Name>Softeq.XToolkit.Bindings</Name>
     </ProjectReference>
     <ProjectReference Include="..\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
-      <Project>{21503153-9566-4789-9B5A-73F2BA71AA51}</Project>
+      <Project>{B776744C-4A23-48FF-A177-7A0ED4AD76C5}</Project>
       <Name>Softeq.XToolkit.Common</Name>
     </ProjectReference>
   </ItemGroup>
