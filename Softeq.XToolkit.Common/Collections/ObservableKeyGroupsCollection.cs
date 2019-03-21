@@ -87,6 +87,17 @@ namespace Softeq.XToolkit.Common.Collections
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
+        public void AddGroups(IEnumerable<ObservableKeyGroup<TKey, TValue>> groups)
+        {
+            foreach (var group in groups)
+            {
+                Keys.Add(group.Key);
+                Add(group);
+            }
+
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        }
+
         public void ClearGroup(TKey key)
         {
             this.FirstOrDefault(x => x.Key.Equals(key))?.Clear();
