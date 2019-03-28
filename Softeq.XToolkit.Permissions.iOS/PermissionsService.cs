@@ -9,6 +9,7 @@ using Foundation;
 using Plugin.Permissions;
 using UIKit;
 using UserNotifications;
+using System.ComponentModel;
 
 namespace Softeq.XToolkit.Permissions.iOS
 {
@@ -50,6 +51,10 @@ namespace Softeq.XToolkit.Permissions.iOS
             if (permission == Permission.Bluetooth)
             {
                 return CheckBluetoothPermission();
+            }
+            if (permission == Permission.Notifications)
+            {
+                return await CheckNotificationsPermissionAsync().ConfigureAwait(false);
             }
 
             var result = await CrossPermissions.Current
@@ -99,6 +104,20 @@ namespace Softeq.XToolkit.Permissions.iOS
             return PermissionStatus.Unknown;
         }
 
+        private Task<PermissionStatus> CheckNotificationsPermissionAsync()
+        {
+            var tcs = new TaskCompletionSource<PermissionStatus>();
+
+            UIApplication.SharedApplication.BeginInvokeOnMainThread(() =>
+            {
+                var result = UIApplication.SharedApplication.IsRegisteredForRemoteNotifications ?
+                                PermissionStatus.Granted : PermissionStatus.Unknown;
+                tcs.SetResult(result);
+            });
+
+            return tcs.Task;
+        }
+
         private static async Task<PermissionStatus> RequestNotificationPermissionAsync()
         {
             var notificationCenter = UNUserNotificationCenter.Current;
@@ -136,6 +155,10 @@ namespace Softeq.XToolkit.Permissions.iOS
                     return Plugin.Permissions.Abstractions.Permission.Storage;
                 case Permission.Photos:
                     return Plugin.Permissions.Abstractions.Permission.Photos;
+                case Permission.Bluetooth:
+                case Permission.Notifications:
+                    throw new InvalidEnumArgumentException($"Plugin.Permissions does not work with {permission} permissions. " +
+                                                           "Please handle it separately");
                 default:
                     throw new NotImplementedException();
             }
