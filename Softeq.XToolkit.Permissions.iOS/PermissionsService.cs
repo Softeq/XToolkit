@@ -17,7 +17,7 @@ namespace Softeq.XToolkit.Permissions.iOS
     {
 #if DEBUG || RELEASE_WITH_BLE
         private readonly CBCentralManager _bleManager;
-        private CBCentralManager _bleManagerWithAllert;
+        private CBCentralManager _bleManagerWithAlert;
 #endif
         public PermissionsService()
         {
@@ -52,6 +52,7 @@ namespace Softeq.XToolkit.Permissions.iOS
             {
                 return CheckBluetoothPermission();
             }
+
             if (permission == Permission.Notifications)
             {
                 return await CheckNotificationsPermissionAsync().ConfigureAwait(false);
@@ -97,7 +98,7 @@ namespace Softeq.XToolkit.Permissions.iOS
         private PermissionStatus RequestBluetoothPermission()
         {
 #if DEBUG || RELEASE_WITH_BLE
-            _bleManagerWithAllert = new CBCentralManager(new CustomCBCentralManagerDelegate(),
+            _bleManagerWithAlert = new CBCentralManager(new CustomCBCentralManagerDelegate(),
                 DispatchQueue.CurrentQueue,
                 new CBCentralInitOptions {ShowPowerAlert = true});
 #endif
@@ -110,8 +111,9 @@ namespace Softeq.XToolkit.Permissions.iOS
 
             UIApplication.SharedApplication.BeginInvokeOnMainThread(() =>
             {
-                var result = UIApplication.SharedApplication.IsRegisteredForRemoteNotifications ?
-                                PermissionStatus.Granted : PermissionStatus.Unknown;
+                var result = UIApplication.SharedApplication.IsRegisteredForRemoteNotifications
+                    ? PermissionStatus.Granted
+                    : PermissionStatus.Unknown;
                 tcs.SetResult(result);
             });
 
@@ -155,10 +157,13 @@ namespace Softeq.XToolkit.Permissions.iOS
                     return Plugin.Permissions.Abstractions.Permission.Storage;
                 case Permission.Photos:
                     return Plugin.Permissions.Abstractions.Permission.Photos;
+                case Permission.LocationInUse:
+                    return Plugin.Permissions.Abstractions.Permission.LocationWhenInUse;
                 case Permission.Bluetooth:
                 case Permission.Notifications:
-                    throw new InvalidEnumArgumentException($"Plugin.Permissions does not work with {permission} permissions. " +
-                                                           "Please handle it separately");
+                    throw new InvalidEnumArgumentException(
+                        $"Plugin.Permissions does not work with {permission} permissions. " +
+                        "Please handle it separately");
                 default:
                     throw new NotImplementedException();
             }
