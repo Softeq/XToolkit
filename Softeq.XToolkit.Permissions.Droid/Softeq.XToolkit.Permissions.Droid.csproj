@@ -58,7 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Softeq.XToolkit.Permissions\Softeq.XToolkit.Permissions.csproj">
-      <Project>{424EABDC-DCC0-4616-B603-93582D9A9AD4}</Project>
+      <Project>{D01E2FAF-37B1-4049-AFD8-AAB5C3779EC4}</Project>
       <Name>Softeq.XToolkit.Permissions</Name>
     </ProjectReference>
   </ItemGroup>

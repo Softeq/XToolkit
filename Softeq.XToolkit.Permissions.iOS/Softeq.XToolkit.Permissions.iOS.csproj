@@ -51,18 +51,17 @@
         <Optimize>true</Optimize>
         <DebugType>pdbonly</DebugType>
     </PropertyGroup>
-    <Import Project="..\..\Configurations.targets"/>
+    <Import Project="..\..\Configurations.targets" />
     <ItemGroup>
-        <Reference Include="System"/>
-        <Reference Include="System.Xml"/>
-        <Reference Include="System.Core"/>
-        <Reference Include="Xamarin.iOS"/>
+        <Reference Include="System" />
+        <Reference Include="System.Xml" />
+        <Reference Include="System.Core" />
+        <Reference Include="Xamarin.iOS" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="PermissionsManager.cs"/>
-        <Compile Include="PermissionsService.cs"/>
-        <Compile Include="Properties\AssemblyInfo.cs"/>
-        <Compile Include="CustomCBCentralManagerDelegate.cs"/>
+        <Compile Include="PermissionsManager.cs" />
+        <Compile Include="PermissionsService.cs" />
+        <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Plugin.Permissions">
@@ -71,13 +70,13 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
-            <Project>{B776744C-4A23-48FF-A177-7A0ED4AD76C5}</Project>
+            <Project>{857902A3-313D-4A7A-ABAA-96CADD8E8B5E}</Project>
             <Name>Softeq.XToolkit.Common</Name>
         </ProjectReference>
         <ProjectReference Include="..\Softeq.XToolkit.Permissions\Softeq.XToolkit.Permissions.csproj">
-            <Project>{76517B8B-160F-4116-8153-28D78EA11324}</Project>
+            <Project>{D01E2FAF-37B1-4049-AFD8-AAB5C3779EC4}</Project>
             <Name>Softeq.XToolkit.Permissions</Name>
         </ProjectReference>
     </ItemGroup>
-    <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets"/>
+    <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

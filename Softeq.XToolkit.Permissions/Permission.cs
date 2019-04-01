@@ -8,7 +8,6 @@ namespace Softeq.XToolkit.Permissions
         Photos,
         Camera,
         Storage,
-        Bluetooth,
         Notifications,
         LocationInUse
     }

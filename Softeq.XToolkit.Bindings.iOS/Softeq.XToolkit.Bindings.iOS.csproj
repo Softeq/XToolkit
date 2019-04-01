@@ -58,11 +58,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Softeq.XToolkit.Bindings\Softeq.XToolkit.Bindings.csproj">
-      <Project>{CC6CF7C4-AB9F-41C1-BA45-A889E8FF11F5}</Project>
+      <Project>{1D4552C9-ECCF-4D9F-98AD-E537042588E1}</Project>
       <Name>Softeq.XToolkit.Bindings</Name>
     </ProjectReference>
     <ProjectReference Include="..\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
-      <Project>{B776744C-4A23-48FF-A177-7A0ED4AD76C5}</Project>
+      <Project>{857902A3-313D-4A7A-ABAA-96CADD8E8B5E}</Project>
       <Name>Softeq.XToolkit.Common</Name>
     </ProjectReference>
   </ItemGroup>

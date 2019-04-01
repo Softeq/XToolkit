@@ -1,3 +1,6 @@
+// Developed by Softeq Development Corporation
+// http://www.softeq.com
+
 using UIKit;
 
 namespace Softeq.XToolkit.Bindings.iOS.Gestures
@@ -5,11 +8,6 @@ namespace Softeq.XToolkit.Bindings.iOS.Gestures
     public class SwipeGestureRecognizerBehaviour
         : GestureRecognizerBehavior<UISwipeGestureRecognizer>
     {
-        protected override void HandleGesture(UISwipeGestureRecognizer gesture)
-        {
-            FireCommand();
-        }
-
         public SwipeGestureRecognizerBehaviour(UIView target, UISwipeGestureRecognizerDirection direction,
             uint numberOfTouchesRequired = 1)
         {
@@ -20,6 +18,11 @@ namespace Softeq.XToolkit.Bindings.iOS.Gestures
             };
 
             AddGestureRecognizer(target, swipe);
+        }
+
+        protected override void HandleGesture(UISwipeGestureRecognizer gesture)
+        {
+            FireCommand();
         }
     }
 }

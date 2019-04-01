@@ -1,3 +1,6 @@
+// Developed by Softeq Development Corporation
+// http://www.softeq.com
+
 using UIKit;
 
 namespace Softeq.XToolkit.Bindings.iOS.Gestures
@@ -5,11 +8,6 @@ namespace Softeq.XToolkit.Bindings.iOS.Gestures
     public class TapGestureRecognizerBehaviour
         : GestureRecognizerBehavior<UITapGestureRecognizer>
     {
-        protected override void HandleGesture(UITapGestureRecognizer gesture)
-        {
-            FireCommand();
-        }
-
         public TapGestureRecognizerBehaviour(UIView target, uint numberOfTapsRequired = 1,
             uint numberOfTouchesRequired = 1,
             bool cancelsTouchesInView = true)
@@ -22,6 +20,11 @@ namespace Softeq.XToolkit.Bindings.iOS.Gestures
             };
 
             AddGestureRecognizer(target, tap);
+        }
+
+        protected override void HandleGesture(UITapGestureRecognizer gesture)
+        {
+            FireCommand();
         }
     }
 }

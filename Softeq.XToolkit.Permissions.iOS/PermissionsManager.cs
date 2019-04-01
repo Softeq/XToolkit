@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿// Developed by Softeq Development Corporation
+// http://www.softeq.com
+
+using System.Threading.Tasks;
 using Softeq.XToolkit.Common.Interfaces;
 
 namespace Softeq.XToolkit.Permissions.iOS
@@ -42,14 +45,7 @@ namespace Softeq.XToolkit.Permissions.iOS
 
         private void OpenSettings(Permission permission)
         {
-            if (permission == Permission.Bluetooth)
-            {
-                _permissionsService.RequestPermissionsAsync(Permission.Bluetooth);
-            }
-            else
-            {
-                _permissionsService.OpenSettings();
-            }
+            _permissionsService.OpenSettings();
         }
 
         private async Task<PermissionStatus> NotificationsCheckWithRequestAsync()

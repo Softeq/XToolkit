@@ -15,28 +15,11 @@ namespace Softeq.XToolkit.Permissions.iOS
 {
     public class PermissionsService : IPermissionsService
     {
-#if DEBUG || RELEASE_WITH_BLE
-        private readonly CBCentralManager _bleManager;
-        private CBCentralManager _bleManagerWithAlert;
-#endif
-        public PermissionsService()
-        {
-#if DEBUG || RELEASE_WITH_BLE
-            _bleManager = new CBCentralManager(new CustomCBCentralManagerDelegate(), DispatchQueue.MainQueue,
-                new CBCentralInitOptions {ShowPowerAlert = false});
-#endif
-        }
-
         public async Task<PermissionStatus> RequestPermissionsAsync(Permission permission)
         {
             if (permission == Permission.Notifications)
             {
                 return await RequestNotificationPermissionAsync().ConfigureAwait(false);
-            }
-
-            if (permission == Permission.Bluetooth)
-            {
-                return RequestBluetoothPermission();
             }
 
             var pluginPermission = ToPluginPermission(permission);
@@ -48,11 +31,6 @@ namespace Softeq.XToolkit.Permissions.iOS
 
         public async Task<PermissionStatus> CheckPermissionsAsync(Permission permission)
         {
-            if (permission == Permission.Bluetooth)
-            {
-                return CheckBluetoothPermission();
-            }
-
             if (permission == Permission.Notifications)
             {
                 return await CheckNotificationsPermissionAsync().ConfigureAwait(false);
@@ -78,46 +56,13 @@ namespace Softeq.XToolkit.Permissions.iOS
             }
         }
 
-        private PermissionStatus CheckBluetoothPermission()
+        private async Task<PermissionStatus> CheckNotificationsPermissionAsync()
         {
-            var result = PermissionStatus.Unknown;
-
-            if (_bleManager.State == CBCentralManagerState.PoweredOn)
-            {
-                result = PermissionStatus.Granted;
-            }
-
-            if (_bleManager.State == CBCentralManagerState.PoweredOff)
-            {
-                result = PermissionStatus.Denied;
-            }
-
-            return result;
-        }
-
-        private PermissionStatus RequestBluetoothPermission()
-        {
-#if DEBUG || RELEASE_WITH_BLE
-            _bleManagerWithAlert = new CBCentralManager(new CustomCBCentralManagerDelegate(),
-                DispatchQueue.CurrentQueue,
-                new CBCentralInitOptions {ShowPowerAlert = true});
-#endif
-            return PermissionStatus.Unknown;
-        }
-
-        private Task<PermissionStatus> CheckNotificationsPermissionAsync()
-        {
-            var tcs = new TaskCompletionSource<PermissionStatus>();
-
-            UIApplication.SharedApplication.BeginInvokeOnMainThread(() =>
-            {
-                var result = UIApplication.SharedApplication.IsRegisteredForRemoteNotifications
-                    ? PermissionStatus.Granted
-                    : PermissionStatus.Unknown;
-                tcs.SetResult(result);
-            });
-
-            return tcs.Task;
+            var notificationSettings = await UNUserNotificationCenter.Current.GetNotificationSettingsAsync().ConfigureAwait(false);
+            var notificationsSettingsEnabled = notificationSettings.SoundSetting == UNNotificationSetting.Enabled
+                && notificationSettings.AlertSetting == UNNotificationSetting.Enabled;
+            return notificationsSettingsEnabled
+                ? PermissionStatus.Granted : PermissionStatus.Denied;
         }
 
         private static async Task<PermissionStatus> RequestNotificationPermissionAsync()
@@ -159,7 +104,6 @@ namespace Softeq.XToolkit.Permissions.iOS
                     return Plugin.Permissions.Abstractions.Permission.Photos;
                 case Permission.LocationInUse:
                     return Plugin.Permissions.Abstractions.Permission.LocationWhenInUse;
-                case Permission.Bluetooth:
                 case Permission.Notifications:
                     throw new InvalidEnumArgumentException(
                         $"Plugin.Permissions does not work with {permission} permissions. " +
