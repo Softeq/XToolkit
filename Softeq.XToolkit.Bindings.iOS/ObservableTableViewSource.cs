@@ -36,7 +36,16 @@ namespace Softeq.XToolkit.Bindings.iOS
         private UITableView _view;
 
         public event EventHandler LastItemRequested;
-        public event EventHandler<GenericEventArgs<TItem>> ItemClicked;
+
+        /// <summary>
+        /// Called when item was selected
+        /// </summary>
+        public event EventHandler<GenericEventArgs<TItem>> ItemSelected;
+
+        /// <summary>
+        /// Called every time when user clicked by item (select/deselect)
+        /// </summary>
+        public event EventHandler<GenericEventArgs<TItem>> ItemTapped;
 
         /// <summary>
         ///     Constructs and initializes an instance of <see cref="ObservableTableViewSource{TItem}" />
@@ -64,6 +73,13 @@ namespace Softeq.XToolkit.Bindings.iOS
         ///     passed as second parameter.
         /// </summary>
         public Action<UITableViewCell, TItem, NSIndexPath> BindCellDelegate { get; set; }
+
+        /// <summary>
+        /// A delegate to a method <see cref="CanEditRow" /> of <see cref="UITableViewSource" />.
+        /// This method determines whether a row can be edited in a UITableView.
+        /// </summary>
+        /// <value>The can edit cell delegate. </value>
+        public Func<TItem, NSIndexPath, bool> CanEditCellDelegate { get; set; }
 
         /// <summary>
         ///     A delegate to a method creating or reusing a <see cref="UITableViewCell" />.
@@ -326,7 +342,9 @@ namespace Softeq.XToolkit.Bindings.iOS
         /// <param name="indexPath">The row's NSIndexPath.</param>
         public override void RowDeselected(UITableView tableView, NSIndexPath indexPath)
         {
+            var item = _dataSource != null ? _dataSource[indexPath.Row] : default(TItem);
             SelectedItem = default(TItem);
+            ItemTapped?.Invoke(this, new GenericEventArgs<TItem>(item));
         }
 
         /// <summary>
@@ -339,7 +357,8 @@ namespace Softeq.XToolkit.Bindings.iOS
         {
             var item = _dataSource != null ? _dataSource[indexPath.Row] : default(TItem);
             SelectedItem = item;
-            ItemClicked?.Invoke(this, new GenericEventArgs<TItem>(item));
+            ItemSelected?.Invoke(this, new GenericEventArgs<TItem>(item));
+            ItemTapped?.Invoke(this, new GenericEventArgs<TItem>(item));
         }
 
         /// <summary>
@@ -376,7 +395,7 @@ namespace Softeq.XToolkit.Bindings.iOS
             }
             else
             {
-                BindCellDelegate(cell, (TItem) item, indexPath);
+                BindCellDelegate(cell, (TItem)item, indexPath);
             }
         }
 
@@ -422,39 +441,39 @@ namespace Softeq.XToolkit.Bindings.iOS
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                    {
-                        var count = e.NewItems.Count;
-                        var paths = new NSIndexPath[count];
-
-                        for (var i = 0; i < count; i++)
                         {
-                            paths[i] = NSIndexPath.FromRowSection(e.NewStartingIndex + i, 0);
-                        }
+                            var count = e.NewItems.Count;
+                            var paths = new NSIndexPath[count];
 
-                        _view.InsertRows(paths, AddAnimation);
-                    }
+                            for (var i = 0; i < count; i++)
+                            {
+                                paths[i] = NSIndexPath.FromRowSection(e.NewStartingIndex + i, 0);
+                            }
+
+                            _view.InsertRows(paths, AddAnimation);
+                        }
                         break;
 
                     case NotifyCollectionChangedAction.Remove:
-                    {
-                        var count = e.OldItems.Count;
-                        var paths = new NSIndexPath[count];
-
-                        for (var i = 0; i < count; i++)
                         {
-                            var index = NSIndexPath.FromRowSection(e.OldStartingIndex + i, 0);
-                            paths[i] = index;
+                            var count = e.OldItems.Count;
+                            var paths = new NSIndexPath[count];
 
-                            var item = e.OldItems[i];
-
-                            if (Equals(SelectedItem, item))
+                            for (var i = 0; i < count; i++)
                             {
-                                SelectedItem = default(TItem);
-                            }
-                        }
+                                var index = NSIndexPath.FromRowSection(e.OldStartingIndex + i, 0);
+                                paths[i] = index;
 
-                        _view.DeleteRows(paths, DeleteAnimation);
-                    }
+                                var item = e.OldItems[i];
+
+                                if (Equals(SelectedItem, item))
+                                {
+                                    SelectedItem = default(TItem);
+                                }
+                            }
+
+                            _view.DeleteRows(paths, DeleteAnimation);
+                        }
                         break;
                     case NotifyCollectionChangedAction.Move:
                         {
@@ -490,13 +509,32 @@ namespace Softeq.XToolkit.Bindings.iOS
             }
         }
 
+        /// <summary>
+        /// Cans the edit row.
+        /// </summary>
+        /// <returns><c>true</c>, if edit row was caned, <c>false</c> otherwise. Returns <c>true</c> by default.</returns>
+        /// <param name="tableView">Table view.</param>
+        /// <param name="indexPath">Index path.</param>
+        public override bool CanEditRow(UITableView tableView, NSIndexPath indexPath)
+        {
+            if (CanEditCellDelegate != null)
+            {
+                var collection = _dataSource;
+
+                if (collection != null)
+                {
+                    var item = collection[indexPath.Row];
+
+                    return CanEditCellDelegate.Invoke(item, indexPath);
+                }
+            }
+
+            return true;
+        }
+
         private void RaiseSelectionChanged()
         {
-            var handler = SelectionChanged;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            SelectionChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

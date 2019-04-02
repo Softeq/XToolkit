@@ -23,6 +23,8 @@ namespace Softeq.XToolkit.Bindings.Droid
         private Action<RecyclerView.ViewHolder, int, TKey> _bindHeaderViewHolderAction;
         private IDisposable _subscription;
 
+        public event EventHandler LastItemRequested;
+
         public ObservableRecyclerGroupViewAdapter(
             ObservableKeyGroupsCollection<TKey, TItem> items,
             Func<ViewGroup, int, RecyclerView.ViewHolder> getHolderFunc,
@@ -66,6 +68,11 @@ namespace Softeq.XToolkit.Bindings.Droid
                 }
 
                 _bindViewHolderAction(holder, position, item.Item, isLast);
+            }
+
+            if (position == _plainItems.Count - 1)
+            {
+                LastItemRequested?.Invoke(this, EventArgs.Empty);
             }
         }
 

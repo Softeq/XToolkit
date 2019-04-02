@@ -1,4 +1,4 @@
-﻿// Developed by Softeq Development Corporation
+// Developed by Softeq Development Corporation
 // http://www.softeq.com
 
 namespace Softeq.XToolkit.Auth
@@ -16,9 +16,5 @@ namespace Softeq.XToolkit.Auth
         public string UserDisplayName { get; set; }
 
         public string UserPhotoUrl { get; set; }
-
-        public bool IsProxyEnabled { get; set; }
-
-        public string ProxyAddress { get; set; }
     }
 }

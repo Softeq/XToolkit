@@ -116,7 +116,7 @@ namespace Softeq.XToolkit.Common.Collections
         {
             var eventArgs = CreateItemsChangedEventArgs(NotifyCollectionChangedAction.Remove);
             var sectionIndex = Keys.IndexOf(key);
-            eventArgs.ModifiedItemsIndexes.Add((sectionIndex, Enumerable.Range(0, Items[sectionIndex].Count).ToList());
+            eventArgs.ModifiedItemsIndexes.Add((sectionIndex, Enumerable.Range(0, Items[sectionIndex].Count).ToList()));
 
             this.FirstOrDefault(x => x.Key.Equals(key))?.Clear();
 
