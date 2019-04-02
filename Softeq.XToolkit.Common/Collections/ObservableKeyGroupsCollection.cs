@@ -82,32 +82,59 @@ namespace Softeq.XToolkit.Common.Collections
 
         public void AddGroup(ObservableKeyGroup<TKey, TValue> group)
         {
+            var eventArgs = CreateItemsChangedEventArgs(NotifyCollectionChangedAction.Add);
+
             Keys.Add(group.Key);
             Add(group);
+
+            eventArgs.ModifiedSectionsIndexes.Add(Keys.IndexOf(group.Key));
+            eventArgs.ModifiedItemsIndexes.Add((Keys.IndexOf(group.Key),
+                Enumerable.Range(0, group.Count).ToList()));
+
+            ItemsChanged?.Invoke(this, eventArgs);
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         public void AddGroups(IEnumerable<ObservableKeyGroup<TKey, TValue>> groups)
         {
+            var eventArgs = CreateItemsChangedEventArgs(NotifyCollectionChangedAction.Add);
+
             foreach (var group in groups)
             {
                 Keys.Add(group.Key);
                 Add(group);
+                eventArgs.ModifiedSectionsIndexes.Add(Keys.IndexOf(group.Key));
+                eventArgs.ModifiedItemsIndexes.Add((Keys.IndexOf(group.Key),
+                    Enumerable.Range(0, group.Count).ToList()));
             }
 
+            ItemsChanged?.Invoke(this, eventArgs);
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         public void ClearGroup(TKey key)
         {
+            var eventArgs = CreateItemsChangedEventArgs(NotifyCollectionChangedAction.Remove);
+            var sectionIndex = Keys.IndexOf(key);
+            eventArgs.ModifiedItemsIndexes.Add((sectionIndex, Enumerable.Range(0, Items[sectionIndex].Count).ToList());
+
             this.FirstOrDefault(x => x.Key.Equals(key))?.Clear();
+
+            ItemsChanged?.Invoke(this, eventArgs);
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         public void RemoveGroup(ObservableKeyGroup<TKey, TValue> group)
         {
+            var eventArgs = CreateItemsChangedEventArgs(NotifyCollectionChangedAction.Remove);
+            var sectionIndex = Keys.IndexOf(group.Key);
+            eventArgs.ModifiedSectionsIndexes.Add(sectionIndex);
+            eventArgs.ModifiedItemsIndexes.Add((sectionIndex, Enumerable.Range(0, group.Count).ToList()));
+
             Remove(group);
             Keys.Remove(group.Key);
+
+            ItemsChanged?.Invoke(this, eventArgs);
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
