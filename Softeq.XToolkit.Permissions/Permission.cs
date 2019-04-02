@@ -9,6 +9,7 @@ namespace Softeq.XToolkit.Permissions
         Camera,
         Storage,
         Notifications,
-        Location
+        Location,
+        CallPhone
     }
 }

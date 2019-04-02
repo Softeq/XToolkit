@@ -70,6 +70,8 @@ namespace Softeq.XToolkit.Permissions.Droid
                     return Plugin.Permissions.Abstractions.Permission.Storage;
                 case Permission.Location:
                     return Plugin.Permissions.Abstractions.Permission.Location;
+                case Permission.CallPhone:
+                    return Plugin.Permissions.Abstractions.Permission.Phone;
                 default:
                     throw new NotImplementedException();
             }
@@ -85,6 +87,8 @@ namespace Softeq.XToolkit.Permissions.Droid
                     return Permission.Photos;
                 case Plugin.Permissions.Abstractions.Permission.Location:
                     return Permission.Location;
+                case Plugin.Permissions.Abstractions.Permission.Phone:
+                    return Permission.CallPhone;
                 default:
                     throw new NotImplementedException();
             }
