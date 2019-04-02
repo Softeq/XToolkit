@@ -72,7 +72,6 @@ namespace Softeq.XToolkit.Common.Collections
             }
 
             ItemsChanged?.Invoke(this, eventArgs);
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         public void AddRangeToGroups(IList<TValue> listItem, Func<TValue, TKey> selector = null)
@@ -92,7 +91,6 @@ namespace Softeq.XToolkit.Common.Collections
                 Enumerable.Range(0, group.Count).ToList()));
 
             ItemsChanged?.Invoke(this, eventArgs);
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         public void AddGroups(IEnumerable<ObservableKeyGroup<TKey, TValue>> groups)
@@ -109,7 +107,6 @@ namespace Softeq.XToolkit.Common.Collections
             }
 
             ItemsChanged?.Invoke(this, eventArgs);
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         public void ClearGroup(TKey key)
@@ -121,7 +118,6 @@ namespace Softeq.XToolkit.Common.Collections
             this.FirstOrDefault(x => x.Key.Equals(key))?.Clear();
 
             ItemsChanged?.Invoke(this, eventArgs);
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         public void RemoveGroup(ObservableKeyGroup<TKey, TValue> group)
@@ -135,7 +131,6 @@ namespace Softeq.XToolkit.Common.Collections
             Keys.Remove(group.Key);
 
             ItemsChanged?.Invoke(this, eventArgs);
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         public void AddRangeToGroupsSorted<T>(IEnumerable<T> items,
