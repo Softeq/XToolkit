@@ -10,6 +10,7 @@ namespace Softeq.XToolkit.Permissions
         Storage,
         Notifications,
         Location,
-        CallPhone
+        CallPhone,
+        Microphone
     }
 }
