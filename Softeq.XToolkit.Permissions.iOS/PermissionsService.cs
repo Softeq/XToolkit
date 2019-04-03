@@ -3,8 +3,6 @@
 
 using System;
 using System.Threading.Tasks;
-using CoreBluetooth;
-using CoreFoundation;
 using Foundation;
 using Plugin.Permissions;
 using UIKit;

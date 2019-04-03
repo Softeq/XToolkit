@@ -48,15 +48,5 @@ namespace Softeq.XToolkit.Common.iOS.Extensions
             child.View.AddAsSubviewWithParentSize(targetView ?? parent.View);
             child.DidMoveToParentViewController(parent);
         }
-
-        public static void SetParentSize(this UIView view)
-        {
-            var right = view.RightAnchor.ConstraintEqualTo(view.Superview.RightAnchor);
-            var left = view.LeftAnchor.ConstraintEqualTo(view.Superview.LeftAnchor);
-            var top = view.TopAnchor.ConstraintEqualTo(view.Superview.TopAnchor);
-            var bottom = view.BottomAnchor.ConstraintEqualTo(view.Superview.BottomAnchor);
-
-            NSLayoutConstraint.ActivateConstraints(new[] {right, left, top, bottom});
-        }
     }
 }
