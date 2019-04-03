@@ -3,6 +3,7 @@
 
 using System;
 using System.Threading.Tasks;
+using CoreLocation;
 using Foundation;
 using Plugin.Permissions;
 using UIKit;
@@ -17,6 +18,11 @@ namespace Softeq.XToolkit.Permissions.iOS
             if (permission == Permission.Notifications)
             {
                 return await RequestNotificationPermissionAsync().ConfigureAwait(false);
+            }
+
+            if (permission == Permission.Location)
+            {
+                return await RequestLocationPermissionAsync().ConfigureAwait(false);
             }
 
             var pluginPermission = ToPluginPermission(permission);
@@ -83,7 +89,7 @@ namespace Softeq.XToolkit.Permissions.iOS
                 case Permission.Photos:
                     return Plugin.Permissions.Abstractions.Permission.Photos;
                 case Permission.Location:
-                    return Plugin.Permissions.Abstractions.Permission.Location;
+                    return Plugin.Permissions.Abstractions.Permission.Location; // Plugin is not returning result for some reason (iOS 11), added custom logic below
                 case Permission.Microphone:
                     return Plugin.Permissions.Abstractions.Permission.Microphone;
                 default:
@@ -109,5 +115,45 @@ namespace Softeq.XToolkit.Permissions.iOS
                     throw new NotImplementedException();
             }
         }
+
+        #region Location permission
+        private readonly CLLocationManager _locationManager = new CLLocationManager();
+        private TaskCompletionSource<PermissionStatus> _taskCompletionSource;
+
+        private Task<PermissionStatus> RequestLocationPermissionAsync()
+        {
+            _taskCompletionSource = new TaskCompletionSource<PermissionStatus>();
+            _locationManager.AuthorizationChanged += OnLocationAuthorizationChanged;
+            _locationManager.RequestWhenInUseAuthorization();
+
+            return _taskCompletionSource.Task;
+        }
+
+        private void OnLocationAuthorizationChanged(object sender, CLAuthorizationChangedEventArgs e)
+        {
+            if (_taskCompletionSource != null)
+            {
+                _taskCompletionSource.TrySetResult(ToPermissionStatus(e.Status));
+                _taskCompletionSource = null;
+            }
+            _locationManager.AuthorizationChanged -= OnLocationAuthorizationChanged;
+        }
+
+        private PermissionStatus ToPermissionStatus(CLAuthorizationStatus status)
+        {
+            switch (status)
+            {
+                case CLAuthorizationStatus.Authorized:
+                case CLAuthorizationStatus.AuthorizedWhenInUse:
+                    return PermissionStatus.Granted;
+                case CLAuthorizationStatus.Denied:
+                case CLAuthorizationStatus.Restricted:
+                    return PermissionStatus.Denied;
+                case CLAuthorizationStatus.NotDetermined:
+                default:
+                    return PermissionStatus.Unknown;
+            }
+        }
+        #endregion
     }
 }
