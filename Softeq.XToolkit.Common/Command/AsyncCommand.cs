@@ -42,10 +42,6 @@ namespace Softeq.XToolkit.Common.Command
     {
         private readonly Func<Task> _action;
 
-        public AsyncCommand()
-        {
-        }
-
         public AsyncCommand(Func<Task> myAsyncFunction)
         {
             _action = myAsyncFunction;

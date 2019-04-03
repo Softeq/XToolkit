@@ -7,7 +7,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 using Softeq.XToolkit.Common;
+using Softeq.XToolkit.Common.Interfaces;
 
 namespace Softeq.XToolkit.Bindings
 {
@@ -45,6 +47,10 @@ namespace Softeq.XToolkit.Bindings
         private PropertyInfo _targetProperty;
         protected WeakReference PropertySource;
         protected WeakReference PropertyTarget;
+        private IConverter<TTarget, TSource> _valueConverter;
+        private WeakAction<TSource> _onSourceUpdateWithParameter;
+        private readonly Func<TSource> _sourcePropertyFunc;
+        private WeakFunc<TSource, Task> _sourceUpdateFunctionWithParameter;
 
         /// <summary>
         ///     Initializes a new instance of the Binding class for which the source and target properties
@@ -184,6 +190,7 @@ namespace Softeq.XToolkit.Bindings
 
             TopSource = new WeakReference(source);
             _sourcePropertyExpression = sourcePropertyExpression;
+            _sourcePropertyFunc = _sourcePropertyExpression.Compile();
             _sourcePropertyName = GetPropertyName(sourcePropertyExpression);
 
             TopTarget = target == null ? TopSource : new WeakReference(target);
@@ -267,6 +274,21 @@ namespace Softeq.XToolkit.Bindings
             return this;
         }
 
+        public Binding SetConverter(IConverter<TTarget, TSource> converter)
+        {
+            if (converter == null)
+            {
+                return this;
+            }
+
+            _valueConverter = converter;
+
+            ConvertSourceToTarget(x => _valueConverter.ConvertValue(x));
+            ConvertTargetToSource(x => _valueConverter.ConvertValueBack(x));
+
+            return this;
+        }
+
         /// <summary>
         ///     Instructs the Binding instance to stop listening to value changes and to
         ///     remove all listeneners.
@@ -291,6 +313,7 @@ namespace Softeq.XToolkit.Bindings
         public override void ForceUpdateValueFromSourceToTarget()
         {
             if (_onSourceUpdate == null
+                && _onSourceUpdateWithParameter == null
                 && (PropertySource == null
                     || !PropertySource.IsAlive
                     || PropertySource.Target == null))
@@ -327,6 +350,12 @@ namespace Softeq.XToolkit.Bindings
                 && _onSourceUpdate.IsAlive)
             {
                 _onSourceUpdate.Execute();
+            }
+
+            if (_onSourceUpdateWithParameter != null
+                && _onSourceUpdateWithParameter.IsAlive)
+            {
+                _onSourceUpdateWithParameter.Execute(_sourcePropertyFunc.Invoke());
             }
 
             RaiseValueChanged();
@@ -402,6 +431,7 @@ namespace Softeq.XToolkit.Bindings
             }
 
             if (_onSourceUpdate == null
+                && _onSourceUpdateWithParameter == null
                 && (PropertySource == null
                     || !PropertySource.IsAlive
                     || PropertySource.Target == null))
@@ -498,6 +528,7 @@ namespace Softeq.XToolkit.Bindings
             }
 
             if (_onSourceUpdate == null
+                && _onSourceUpdateWithParameter == null
                 && (PropertySource == null
                     || !PropertySource.IsAlive
                     || PropertySource.Target == null))
@@ -588,6 +619,11 @@ namespace Softeq.XToolkit.Bindings
             }
 
             if (_onSourceUpdate != null)
+            {
+                throw new InvalidOperationException("Cannot use SetTargetEvent with onSourceUpdate");
+            }
+
+            if (_onSourceUpdateWithParameter != null)
             {
                 throw new InvalidOperationException("Cannot use SetTargetEvent with onSourceUpdate");
             }
@@ -693,6 +729,11 @@ namespace Softeq.XToolkit.Bindings
                 throw new InvalidOperationException("Cannot use SetTargetEvent with onSourceUpdate");
             }
 
+            if (_onSourceUpdateWithParameter != null)
+            {
+                throw new InvalidOperationException("Cannot use SetTargetEvent with onSourceUpdate");
+            }
+
             if (PropertyTarget == null
                 || !PropertyTarget.IsAlive
                 || PropertyTarget.Target == null)
@@ -775,6 +816,34 @@ namespace Softeq.XToolkit.Bindings
             }
 
             return this;
+        }
+
+        public Binding<TSource, TTarget> WhenSourceChanges(Action<TSource> callback)
+        {
+            if (_targetPropertyExpression != null)
+            {
+                throw new InvalidOperationException(
+                    "You cannot set both the targetPropertyExpression and call WhenSourceChanges");
+            }
+
+            _onSourceUpdateWithParameter = new WeakAction<TSource>(callback);
+
+            if (_onSourceUpdateWithParameter.IsAlive)
+            {
+                _onSourceUpdateWithParameter.Execute(_sourcePropertyFunc.Invoke());
+            }
+
+            return this;
+        }
+
+        public Binding<TSource, TTarget> WhenSourceChanges(Func<TSource, Task> func)
+        {
+            _sourceUpdateFunctionWithParameter = new WeakFunc<TSource, Task>(func);
+
+            return WhenSourceChanges(source =>
+            {
+                _sourceUpdateFunctionWithParameter.Execute(_sourcePropertyFunc.Invoke());
+            });
         }
 
         protected abstract Binding<TSource, TTarget> CheckControlSource();
@@ -928,6 +997,12 @@ namespace Softeq.XToolkit.Bindings
                 {
                     _onSourceUpdate.Execute();
                 }
+
+                if (_onSourceUpdateWithParameter != null
+                    && _onSourceUpdateWithParameter.IsAlive)
+                {
+                    _onSourceUpdateWithParameter.Execute(_sourcePropertyFunc.Invoke());
+                }
             }
 
             if (Mode == BindingMode.OneTime)
@@ -936,9 +1011,8 @@ namespace Softeq.XToolkit.Bindings
             }
 
             // Check OneWay binding
-            var inpc = PropertySource.Target as INotifyPropertyChanged;
 
-            if (inpc != null)
+            if (PropertySource.Target is INotifyPropertyChanged inpc)
             {
                 var listener = new PropertyChangedEventListener(
                     this,
@@ -961,6 +1035,7 @@ namespace Softeq.XToolkit.Bindings
 
             // Check TwoWay binding
             if (_onSourceUpdate == null
+                && _onSourceUpdateWithParameter == null
                 && PropertyTarget != null
                 && PropertyTarget.IsAlive
                 && PropertyTarget.Target != null)
@@ -1257,6 +1332,7 @@ namespace Softeq.XToolkit.Bindings
             }
 
             _onSourceUpdate?.Execute();
+            _onSourceUpdateWithParameter?.Execute(_sourcePropertyFunc.Invoke());
 
             RaiseValueChanged();
         }

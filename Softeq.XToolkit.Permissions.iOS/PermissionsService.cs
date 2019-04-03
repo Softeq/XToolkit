@@ -1,4 +1,4 @@
-﻿// Developed by Softeq Development Corporation
+// Developed by Softeq Development Corporation
 // http://www.softeq.com
 
 using System;
@@ -7,6 +7,7 @@ using Foundation;
 using Plugin.Permissions;
 using UIKit;
 using UserNotifications;
+using System.ComponentModel;
 
 namespace Softeq.XToolkit.Permissions.iOS
 {
@@ -18,16 +19,21 @@ namespace Softeq.XToolkit.Permissions.iOS
             {
                 return await RequestNotificationPermissionAsync().ConfigureAwait(false);
             }
-            
+
             var pluginPermission = ToPluginPermission(permission);
             var result = await CrossPermissions.Current.RequestPermissionsAsync(pluginPermission);
-            return result.TryGetValue(pluginPermission, out var permissionStatus) 
-                ? ToPermissionStatus(permissionStatus) 
+            return result.TryGetValue(pluginPermission, out var permissionStatus)
+                ? ToPermissionStatus(permissionStatus)
                 : PermissionStatus.Unknown;
         }
 
         public async Task<PermissionStatus> CheckPermissionsAsync(Permission permission)
         {
+            if (permission == Permission.Notifications)
+            {
+                return await CheckNotificationsPermissionAsync().ConfigureAwait(false);
+            }
+
             var result = await CrossPermissions.Current
                 .CheckPermissionStatusAsync(ToPluginPermission(permission)).ConfigureAwait(false);
             return ToPermissionStatus(result);
@@ -41,8 +47,20 @@ namespace Softeq.XToolkit.Permissions.iOS
             }
             else
             {
-                UIApplication.SharedApplication.BeginInvokeOnMainThread(() => { CrossPermissions.Current.OpenAppSettings(); });
+                UIApplication.SharedApplication.BeginInvokeOnMainThread(() =>
+                {
+                    CrossPermissions.Current.OpenAppSettings();
+                });
             }
+        }
+
+        private async Task<PermissionStatus> CheckNotificationsPermissionAsync()
+        {
+            var notificationSettings = await UNUserNotificationCenter.Current.GetNotificationSettingsAsync().ConfigureAwait(false);
+            var notificationsSettingsEnabled = notificationSettings.SoundSetting == UNNotificationSetting.Enabled
+                && notificationSettings.AlertSetting == UNNotificationSetting.Enabled;
+            return notificationsSettingsEnabled
+                ? PermissionStatus.Granted : PermissionStatus.Denied;
         }
 
         private static async Task<PermissionStatus> RequestNotificationPermissionAsync()
@@ -82,21 +100,12 @@ namespace Softeq.XToolkit.Permissions.iOS
                     return Plugin.Permissions.Abstractions.Permission.Storage;
                 case Permission.Photos:
                     return Plugin.Permissions.Abstractions.Permission.Photos;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-        
-        private static Permission ToPermission(Plugin.Permissions.Abstractions.Permission permission)
-        {
-            switch (permission)
-            {
-                case Plugin.Permissions.Abstractions.Permission.Camera:
-                    return Permission.Camera;
-                case Plugin.Permissions.Abstractions.Permission.Photos:
-                    return Permission.Photos;
-                case Plugin.Permissions.Abstractions.Permission.Storage:
-                    return Permission.Storage;
+                case Permission.LocationInUse:
+                    return Plugin.Permissions.Abstractions.Permission.LocationWhenInUse;
+                case Permission.Notifications:
+                    throw new InvalidEnumArgumentException(
+                        $"Plugin.Permissions does not work with {permission} permissions. " +
+                        "Please handle it separately");
                 default:
                     throw new NotImplementedException();
             }
