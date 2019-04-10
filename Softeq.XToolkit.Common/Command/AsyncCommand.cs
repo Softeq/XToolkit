@@ -65,6 +65,7 @@ namespace Softeq.XToolkit.Common.Command
         }
     }
 
+    //TODO PL: add parameter to canExecute
     public class AsyncCommand<T> : AsyncCommandBase, ICommand<T>
     {
         private readonly Func<T, Task> _action;
