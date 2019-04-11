@@ -55,7 +55,7 @@ namespace Softeq.XToolkit.Permissions.iOS
 
             if (permission == Permission.Notifications)
             {
-                return await CheckNotificationsPermissionAsync().ConfigureAwait(false);
+                return CheckNotificationsPermission();
             }
 
             var result = await CrossPermissions.Current
@@ -105,19 +105,21 @@ namespace Softeq.XToolkit.Permissions.iOS
             return PermissionStatus.Unknown;
         }
 
-        private Task<PermissionStatus> CheckNotificationsPermissionAsync()
+        private PermissionStatus CheckNotificationsPermission()
         {
-            var tcs = new TaskCompletionSource<PermissionStatus>();
+            var types = UIUserNotificationType.None;
 
-            UIApplication.SharedApplication.BeginInvokeOnMainThread(() =>
+            UIApplication.SharedApplication.InvokeOnMainThread(() =>
             {
-                var result = UIApplication.SharedApplication.IsRegisteredForRemoteNotifications
-                    ? PermissionStatus.Granted
-                    : PermissionStatus.Unknown;
-                tcs.SetResult(result);
+                types = UIApplication.SharedApplication.CurrentUserNotificationSettings.Types;
             });
 
-            return tcs.Task;
+            if (types.HasFlag(UIUserNotificationType.Alert))
+            {
+                return PermissionStatus.Granted;
+            }
+
+            return PermissionStatus.Unknown;
         }
 
         private static async Task<PermissionStatus> RequestNotificationPermissionAsync()
