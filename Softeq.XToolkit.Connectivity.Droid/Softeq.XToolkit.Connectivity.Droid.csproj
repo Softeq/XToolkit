@@ -38,7 +38,6 @@
     <JavaMaximumHeapSize>
     </JavaMaximumHeapSize>
   </PropertyGroup>
-  <Import Project="..\..\Configurations.targets" />
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -54,17 +53,17 @@
     <Compile Include="InternetConnectionManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Softeq.XToolkit.Common.Droid\Softeq.XToolkit.Common.Droid.csproj">
-      <Project>{18d3fdc1-b0a1-401e-87f2-1c43034e610c}</Project>
-      <Name>Softeq.XToolkit.Common.Droid</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
-      <Project>{857902A3-313D-4A7A-ABAA-96CADD8E8B5E}</Project>
-      <Name>Softeq.XToolkit.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Softeq.XToolkit.Connectivity\Softeq.XToolkit.Connectivity.csproj">
       <Project>{6C0776B7-23E3-4EFD-BE91-F64CC60ACB82}</Project>
       <Name>Softeq.XToolkit.Connectivity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XToolkit.Common\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
+      <Project>{EE289547-C5A5-434E-A26A-DAB4C02B684B}</Project>
+      <Name>Softeq.XToolkit.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XToolkit.Common\Softeq.XToolkit.Common.Droid\Softeq.XToolkit.Common.Droid.csproj">
+      <Project>{18D3FDC1-B0A1-401E-87F2-1C43034E610C}</Project>
+      <Name>Softeq.XToolkit.Common.Droid</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
