@@ -54,16 +54,16 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Softeq.XToolkit.Connectivity\Softeq.XToolkit.Connectivity.csproj">
-      <Project>{6C0776B7-23E3-4EFD-BE91-F64CC60ACB82}</Project>
+      <Project>{BD61F822-17E1-43A7-9704-E150BF8C1BEC}</Project>
       <Name>Softeq.XToolkit.Connectivity</Name>
     </ProjectReference>
-    <ProjectReference Include="..\XToolkit.Common\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
-      <Project>{EE289547-C5A5-434E-A26A-DAB4C02B684B}</Project>
-      <Name>Softeq.XToolkit.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\XToolkit.Common\Softeq.XToolkit.Common.Droid\Softeq.XToolkit.Common.Droid.csproj">
+    <ProjectReference Include="..\..\XToolkit.WhiteLabel\XToolkit.Bindings\XToolkit.Common\Softeq.XToolkit.Common.Droid\Softeq.XToolkit.Common.Droid.csproj">
       <Project>{18D3FDC1-B0A1-401E-87F2-1C43034E610C}</Project>
       <Name>Softeq.XToolkit.Common.Droid</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\XToolkit.WhiteLabel\XToolkit.Bindings\XToolkit.Common\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
+      <Project>{93F44531-29C0-4FDE-AD7B-DE391727C174}</Project>
+      <Name>Softeq.XToolkit.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
