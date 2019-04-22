@@ -160,7 +160,7 @@ namespace Softeq.XToolkit.Bindings.iOS
         /// <returns>The created and initialised <see cref="UICollectionViewCell" />.</returns>
         public override UICollectionViewCell GetCell(UICollectionView collectionView, NSIndexPath indexPath)
         {
-            var cell = (TCell)collectionView.DequeueReusableCell(NsReuseId, indexPath);
+            var cell = (TCell) collectionView.DequeueReusableCell(NsReuseId, indexPath);
 
             try
             {
@@ -206,6 +206,7 @@ namespace Softeq.XToolkit.Bindings.iOS
             {
                 return 0;
             }
+
             return IsInfiniteScroll ? InfiniteItemsCount : _dataSource.Count;
         }
 
@@ -298,7 +299,7 @@ namespace Softeq.XToolkit.Bindings.iOS
                     "BindCell was called but no BindCellDelegate was found");
             }
 
-            BindCellDelegate((TCell)cell, (TItem)item, indexPath);
+            BindCellDelegate((TCell) cell, (TItem) item, indexPath);
         }
 
         /// <summary>
@@ -334,6 +335,8 @@ namespace Softeq.XToolkit.Bindings.iOS
 
                 switch (e.Action)
                 {
+                    // if GetCount overridden we can have invalid Items count which cause crash to be sure
+                    //that items count still the same we add this workaround 
                     case var _
                         when e.Action == NotifyCollectionChangedAction.Add &&
                              DataSource.Count - e.NewItems.Count == numberInSection:
@@ -350,6 +353,8 @@ namespace Softeq.XToolkit.Bindings.iOS
                     }
                         break;
 
+                    // if GetCount overridden we can have invalid Items count which cause crash to be sure
+                    //that items count still the same we add this workaround 
                     case var _ when e.Action == NotifyCollectionChangedAction.Remove &&
                                     DataSource.Count + e.OldItems.Count == numberInSection:
                     {
