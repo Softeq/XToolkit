@@ -329,42 +329,48 @@ namespace Softeq.XToolkit.Bindings.iOS
                     _view.ReloadData();
                     return;
                 }
+
+                var numberInSection = _view.NumberOfItemsInSection(0);
+
                 switch (e.Action)
                 {
-                    case NotifyCollectionChangedAction.Add:
+                    case var _
+                        when e.Action == NotifyCollectionChangedAction.Add &&
+                             DataSource.Count - e.NewItems.Count == numberInSection:
+                    {
+                        var count = e.NewItems.Count;
+                        var paths = new NSIndexPath[count];
+
+                        for (var i = 0; i < count; i++)
                         {
-                            var count = e.NewItems.Count;
-                            var paths = new NSIndexPath[count];
-
-                            for (var i = 0; i < count; i++)
-                            {
-                                paths[i] = NSIndexPath.FromRowSection(e.NewStartingIndex + i, 0);
-                            }
-
-                            _view.InsertItems(paths);
+                            paths[i] = NSIndexPath.FromRowSection(e.NewStartingIndex + i, 0);
                         }
+
+                        _view.InsertItems(paths);
+                    }
                         break;
 
-                    case NotifyCollectionChangedAction.Remove:
+                    case var _ when e.Action == NotifyCollectionChangedAction.Remove &&
+                                    DataSource.Count + e.OldItems.Count == numberInSection:
+                    {
+                        var count = e.OldItems.Count;
+                        var paths = new NSIndexPath[count];
+
+                        for (var i = 0; i < count; i++)
                         {
-                            var count = e.OldItems.Count;
-                            var paths = new NSIndexPath[count];
+                            var index = NSIndexPath.FromRowSection(e.OldStartingIndex + i, 0);
+                            paths[i] = index;
 
-                            for (var i = 0; i < count; i++)
+                            var item = e.OldItems[i];
+
+                            if (Equals(SelectedItem, item))
                             {
-                                var index = NSIndexPath.FromRowSection(e.OldStartingIndex + i, 0);
-                                paths[i] = index;
-
-                                var item = e.OldItems[i];
-
-                                if (Equals(SelectedItem, item))
-                                {
-                                    SelectedItem = default(TItem);
-                                }
+                                SelectedItem = default(TItem);
                             }
-
-                            _view.DeleteItems(paths);
                         }
+
+                        _view.DeleteItems(paths);
+                    }
                         break;
 
                     default:
