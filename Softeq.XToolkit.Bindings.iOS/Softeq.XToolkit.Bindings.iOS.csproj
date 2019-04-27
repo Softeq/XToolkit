@@ -47,6 +47,7 @@
     <Compile Include="AppleBindingExtensions.cs" />
     <Compile Include="AppleBindingFactory.cs" />
     <Compile Include="Gestures\BehaviourExtensions.cs" />
+    <Compile Include="Gestures\PanGestureRecognizerBehaviour.cs" />
     <Compile Include="Gestures\SwipeGestureRecognizerBehaviour.cs" />
     <Compile Include="Gestures\TapGestureRecognizerBehaviour.cs" />
     <Compile Include="ObservableCollectionViewSource.cs" />
