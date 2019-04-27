@@ -10,7 +10,7 @@ namespace Softeq.XToolkit.Bindings.iOS.Gestures
         protected void FireCommand(object argument = null)
         {
             var command = Command;
-            command?.Execute(null);
+            command?.Execute(argument);
         }
 
         protected void AddGestureRecognizer(UIView target, UIGestureRecognizer tap)
