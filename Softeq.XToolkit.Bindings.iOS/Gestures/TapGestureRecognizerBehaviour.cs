@@ -5,6 +5,8 @@ namespace Softeq.XToolkit.Bindings.iOS.Gestures
     public class TapGestureRecognizerBehaviour
         : GestureRecognizerBehavior<UITapGestureRecognizer>
     {
+        public UITapGestureRecognizer TapGestureRecogniser { get; private set; }
+
         protected override void HandleGesture(UITapGestureRecognizer gesture)
         {
             FireCommand();
@@ -14,14 +16,14 @@ namespace Softeq.XToolkit.Bindings.iOS.Gestures
             uint numberOfTouchesRequired = 1,
             bool cancelsTouchesInView = true)
         {
-            var tap = new UITapGestureRecognizer(HandleGesture)
+            TapGestureRecogniser = new UITapGestureRecognizer(HandleGesture)
             {
                 NumberOfTapsRequired = numberOfTapsRequired,
                 NumberOfTouchesRequired = numberOfTouchesRequired,
                 CancelsTouchesInView = cancelsTouchesInView
             };
 
-            AddGestureRecognizer(target, tap);
+            AddGestureRecognizer(target, TapGestureRecogniser);
         }
     }
 }
