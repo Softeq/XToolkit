@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Softeq.XToolkit.RemoteData\Softeq.XToolkit.RemoteData.csproj" />
+    <ProjectReference Include="..\..\XToolkit.Whitelabel\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj" />
   </ItemGroup>
 
 </Project>

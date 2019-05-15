@@ -47,7 +47,6 @@
 		<MtouchHttpClientHandler>
 		</MtouchHttpClientHandler>
 	</PropertyGroup>
-    <Import Project="..\..\Configurations.targets" />
 	<ItemGroup>
 		<Reference Include="System" />
 		<Reference Include="System.Xml" />
@@ -65,13 +64,13 @@
 		<PackageReference Include="Xam.Plugin.Connectivity" Version="3.2.0" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
-		  <Project>{857902A3-313D-4A7A-ABAA-96CADD8E8B5E}</Project>
-		  <Name>Softeq.XToolkit.Common</Name>
-		</ProjectReference>
 		<ProjectReference Include="..\Softeq.XToolkit.Connectivity\Softeq.XToolkit.Connectivity.csproj">
 		  <Project>{6C0776B7-23E3-4EFD-BE91-F64CC60ACB82}</Project>
 		  <Name>Softeq.XToolkit.Connectivity</Name>
+		</ProjectReference>
+		<ProjectReference Include="..\..\XToolkit.Whitelabel\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
+		  <Project>{6253998D-2EF1-49BD-9311-52D35545AC91}</Project>
+		  <Name>Softeq.XToolkit.Common</Name>
 		</ProjectReference>
 	</ItemGroup>
 	<Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

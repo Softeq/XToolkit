@@ -34,7 +34,6 @@
     <AndroidManagedSymbols>true</AndroidManagedSymbols>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
   </PropertyGroup>
-  <Import Project="..\..\Configurations.targets" />
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -50,14 +49,6 @@
     <Compile Include="AddCardActivity.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
-      <Project>{857902A3-313D-4A7A-ABAA-96CADD8E8B5E}</Project>
-      <Name>Softeq.XToolkit.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Softeq.XToolkit.Common.Droid\Softeq.XToolkit.Common.Droid.csproj">
-      <Project>{18D3FDC1-B0A1-401E-87F2-1C43034E610C}</Project>
-      <Name>Softeq.XToolkit.Common.Droid</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Softeq.XToolkit.Stripe\Softeq.XToolkit.Stripe.csproj">
       <Project>{E08C674D-C9AA-4E39-A109-DB56C2489210}</Project>
       <Name>Softeq.XToolkit.Stripe</Name>
@@ -65,6 +56,10 @@
     <ProjectReference Include="..\Softeq.XToolkit.RemoteData\Softeq.XToolkit.RemoteData.csproj">
       <Project>{D978B78C-7A56-438E-ACF1-53C50A6B40FD}</Project>
       <Name>Softeq.XToolkit.RemoteData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\XToolkit.Whitelabel\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
+      <Project>{6253998D-2EF1-49BD-9311-52D35545AC91}</Project>
+      <Name>Softeq.XToolkit.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
