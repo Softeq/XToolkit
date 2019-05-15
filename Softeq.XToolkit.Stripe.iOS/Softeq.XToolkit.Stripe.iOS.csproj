@@ -71,8 +71,8 @@
       <Project>{E08C674D-C9AA-4E39-A109-DB56C2489210}</Project>
       <Name>Softeq.XToolkit.Stripe</Name>
     </ProjectReference>
-    <ProjectReference Include="..\XToolkit.Common\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
-      <Project>{EE289547-C5A5-434E-A26A-DAB4C02B684B}</Project>
+    <ProjectReference Include="..\..\XToolkit.Whitelabel\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
+      <Project>{6253998D-2EF1-49BD-9311-52D35545AC91}</Project>
       <Name>Softeq.XToolkit.Common</Name>
     </ProjectReference>
   </ItemGroup>

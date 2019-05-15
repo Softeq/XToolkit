@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Softeq.XToolkit.Connectivity\Softeq.XToolkit.Connectivity.csproj" />
-    <ProjectReference Include="..\XToolkit.Common\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Connectivity\" />

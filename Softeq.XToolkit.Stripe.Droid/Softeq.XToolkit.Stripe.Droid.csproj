@@ -57,8 +57,8 @@
       <Project>{D978B78C-7A56-438E-ACF1-53C50A6B40FD}</Project>
       <Name>Softeq.XToolkit.RemoteData</Name>
     </ProjectReference>
-    <ProjectReference Include="..\XToolkit.Common\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
-      <Project>{EE289547-C5A5-434E-A26A-DAB4C02B684B}</Project>
+    <ProjectReference Include="..\..\XToolkit.Whitelabel\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
+      <Project>{6253998D-2EF1-49BD-9311-52D35545AC91}</Project>
       <Name>Softeq.XToolkit.Common</Name>
     </ProjectReference>
   </ItemGroup>
