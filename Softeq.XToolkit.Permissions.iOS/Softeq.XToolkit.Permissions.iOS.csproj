@@ -61,14 +61,17 @@
     <PackageReference Include="Plugin.Permissions">
       <Version>3.0.0.12</Version>
     </PackageReference>
+    <PackageReference Include="Xam.Plugins.Settings">
+      <Version>3.1.1</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Softeq.XToolkit.Common\Softeq.XToolkit.Common.csproj">
-      <Project>{b4208549-9b41-4eb2-9f80-8e60d75e6bfa}</Project>
+      <Project>{D30B1B14-B5F2-42B7-93C5-27B280691782}</Project>
       <Name>Softeq.XToolkit.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Softeq.XToolkit.Permissions\Softeq.XToolkit.Permissions.csproj">
-      <Project>{424EABDC-DCC0-4616-B603-93582D9A9AD4}</Project>
+      <Project>{D33103B2-A855-40C7-A9B5-F25D09C3724E}</Project>
       <Name>Softeq.XToolkit.Permissions</Name>
     </ProjectReference>
   </ItemGroup>
