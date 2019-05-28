@@ -108,6 +108,8 @@ namespace Softeq.XToolkit.Permissions.iOS
                     return Plugin.Permissions.Abstractions.Permission.Photos;
                 case Permission.LocationInUse:
                     return Plugin.Permissions.Abstractions.Permission.LocationWhenInUse;
+                case Permission.Microphone:
+                    return Plugin.Permissions.Abstractions.Permission.Microphone;
                 case Permission.Notifications:
                     throw new InvalidEnumArgumentException(
                         $"Plugin.Permissions does not work with {permission} permissions. " +
