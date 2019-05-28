@@ -68,10 +68,8 @@ namespace Softeq.XToolkit.Permissions.Droid
                     return Plugin.Permissions.Abstractions.Permission.Storage;
                 case Permission.Storage:
                     return Plugin.Permissions.Abstractions.Permission.Storage;
-                case Permission.Location:
+                case Permission.LocationInUse:
                     return Plugin.Permissions.Abstractions.Permission.Location;
-                case Permission.CallPhone:
-                    return Plugin.Permissions.Abstractions.Permission.Phone;
                 case Permission.Microphone:
                     return Plugin.Permissions.Abstractions.Permission.Microphone;
                 default:
@@ -88,9 +86,7 @@ namespace Softeq.XToolkit.Permissions.Droid
                 case Plugin.Permissions.Abstractions.Permission.Storage:
                     return Permission.Photos;
                 case Plugin.Permissions.Abstractions.Permission.Location:
-                    return Permission.Location;
-                case Plugin.Permissions.Abstractions.Permission.Phone:
-                    return Permission.CallPhone;
+                    return Permission.LocationInUse;
                 case Plugin.Permissions.Abstractions.Permission.Microphone:
                     return Permission.Microphone;
                 default:
