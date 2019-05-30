@@ -11,5 +11,7 @@ namespace Softeq.XToolkit.Auth.Internal
         public const string ClientSecretKey = "client_secret";
         public const string UsernameKey = "username";
         public const string RefreshTokenKey = "refresh_token";
+        public const string ScopeKey = "scope";
+        public const string ScopeApiKey = "api";
     }
 }

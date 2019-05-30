@@ -31,14 +31,24 @@ namespace Softeq.XToolkit.Auth.Internal
 
         internal Task<LoginResultDto> LogInAsync(string email, string password)
         {
-            var request = new LoginRequest(new RegisterDto {Email = email, Password = password}, _authConfig);
+            var dto = new LoginDto
+            {
+                Email = email,
+                Password = password
+            };
+            var request = new LoginRequest(dto, _authConfig);
             return _restHttpClient.TrySendAndDeserializeAsync<LoginResultDto>(request, _logger);
         }
 
-        internal Task<bool> RegisterAsync(string email, string password)
+        internal Task<bool> RegisterAsync(string email, string password, bool isAcceptedTerms)
         {
-            var request = new RegisterRequest(_jsonSerializer, new RegisterDto {Email = email, Password = password},
-                _authConfig);
+            var dto = new RegisterDto
+            {
+                Email = email,
+                Password = password,
+                IsAcceptedTermsOfService = isAcceptedTerms
+            };
+            var request = new RegisterRequest(_jsonSerializer, dto, _authConfig);
             return _restHttpClient.TrySendAsync(request, _logger);
         }
     }

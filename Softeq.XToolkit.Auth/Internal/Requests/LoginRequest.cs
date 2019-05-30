@@ -10,10 +10,10 @@ namespace Softeq.XToolkit.Auth.Internal.Requests
 {
     internal class LoginRequest : BaseRestRequest
     {
+        private readonly LoginDto _dto;
         private readonly AuthConfig _config;
-        private readonly RegisterDto _dto;
 
-        public LoginRequest(RegisterDto dto, AuthConfig config)
+        public LoginRequest(LoginDto dto, AuthConfig config)
         {
             _dto = dto;
             _config = config;
@@ -37,7 +37,8 @@ namespace Softeq.XToolkit.Auth.Internal.Requests
                 {HttpConsts.ClientIdKey, _config.ClientId},
                 {HttpConsts.ClientSecretKey, _config.ClientSecret},
                 {HttpConsts.UsernameKey, _dto.Email},
-                {HttpConsts.PasswordKey, _dto.Password}
+                {HttpConsts.PasswordKey, _dto.Password},
+                {HttpConsts.ScopeKey, HttpConsts.ScopeApiKey }
             };
 
             return new FormUrlEncodedContent(dict);
