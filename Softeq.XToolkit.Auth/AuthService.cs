@@ -25,9 +25,9 @@ namespace Softeq.XToolkit.Auth
             _accountService = accountService;
         }
 
-        public async Task<bool> RegisterAsync(string email, string password)
+        public async Task<bool> RegisterAsync(string email, string password, bool isAcceptedTerms)
         {
-            var result = await _remoteAuthService.RegisterAsync(email, password).ConfigureAwait(false);
+            var result = await _remoteAuthService.RegisterAsync(email, password, isAcceptedTerms).ConfigureAwait(false);
             if (!result)
             {
                 return false;

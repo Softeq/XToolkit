@@ -17,7 +17,7 @@ namespace Softeq.XToolkit.Auth.Internal.Requests
             _authConfig = authConfig;
         }
 
-        public override string EndpointUrl => $"{_authConfig.BaseUrl}/api/account/register";
+        public override string EndpointUrl => $"{_authConfig.BaseUrl}/account/register";
 
         public override bool UseOriginalEndpoint => true;
     }

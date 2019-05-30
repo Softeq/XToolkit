@@ -7,7 +7,7 @@ namespace Softeq.XToolkit.Auth
 {
     public interface IAuthService
     {
-        Task<bool> RegisterAsync(string email, string password);
+        Task<bool> RegisterAsync(string email, string password, bool isAcceptedTerms);
         Task<bool> LoginAsync(string email, string password);
         void Logout();
     }
