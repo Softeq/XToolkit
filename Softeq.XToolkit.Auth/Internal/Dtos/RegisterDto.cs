@@ -8,5 +8,7 @@ namespace Softeq.XToolkit.Auth.Internal.Dtos
         public string Email { get; set; }
 
         public string Password { get; set; }
+
+        public bool IsAcceptedTermsOfService { get; set; }
     }
 }
