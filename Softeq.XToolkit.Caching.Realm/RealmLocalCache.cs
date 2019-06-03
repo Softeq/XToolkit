@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Softeq.XToolkit.Common.Interfaces;
 using RealmType = Realms.Realm;
+using Realms;
 
 namespace Softeq.XToolkit.Caching.Realm
 {
@@ -18,11 +19,13 @@ namespace Softeq.XToolkit.Caching.Realm
             _jsonSerializer = jsonSerializer;
         }
 
+        protected virtual RealmConfigurationBase Config { get; } = new RealmConfiguration("LocalCache.realm");
+
         public Task<T> Get<T>(string key)
         {
             return Task.Run(() =>
             {
-                using (var realm = RealmType.GetInstance())
+                using (var realm = RealmType.GetInstance(Config))
                 {
                     var result = realm.Find<LocalData>(key);
                     return result == null ? default(T) : _jsonSerializer.Deserialize<T>(result.Data);
@@ -34,7 +37,7 @@ namespace Softeq.XToolkit.Caching.Realm
         {
             return Task.Run(() =>
             {
-                using (var realm = RealmType.GetInstance())
+                using (var realm = RealmType.GetInstance(Config))
                 {
                     var result = realm.Find<LocalData>(key);
                     if (result == null)
@@ -58,7 +61,7 @@ namespace Softeq.XToolkit.Caching.Realm
                     Timestamp = date.ToString("r"),
                     Key = key
                 };
-                using (var realm = RealmType.GetInstance())
+                using (var realm = RealmType.GetInstance(Config))
                 {
                     realm.Write(() =>
                     {
@@ -72,7 +75,7 @@ namespace Softeq.XToolkit.Caching.Realm
         {
             return Task.Run(() =>
             {
-                using (var realm = RealmType.GetInstance())
+                using (var realm = RealmType.GetInstance(Config))
                 {
                     var result = realm.Find<LocalData>(key);
                     return result != null;
@@ -94,10 +97,7 @@ namespace Softeq.XToolkit.Caching.Realm
         {
             Task.Run(() =>
             {
-                using (var realm = RealmType.GetInstance())
-                {
-                    realm.RemoveAll();
-                }
+                RealmType.DeleteRealm(Config);
             });
         }
     }
