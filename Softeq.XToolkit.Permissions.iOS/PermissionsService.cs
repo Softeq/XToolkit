@@ -2,12 +2,12 @@
 // http://www.softeq.com
 
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Foundation;
 using Plugin.Permissions;
 using UIKit;
 using UserNotifications;
-using System.ComponentModel;
 
 namespace Softeq.XToolkit.Permissions.iOS
 {
@@ -23,12 +23,18 @@ namespace Softeq.XToolkit.Permissions.iOS
 
             var pluginPermission = ToPluginPermission(permission);
 
+            var taskCompletionSource = new TaskCompletionSource<PermissionStatus>();
+
             UIApplication.SharedApplication.InvokeOnMainThread(async () =>
             {
-                await CrossPermissions.Current.RequestPermissionsAsync(pluginPermission);
+                var permissionResult = await CrossPermissions.Current.RequestPermissionsAsync(pluginPermission).ConfigureAwait(false);
+                var status = permissionResult.TryGetValue(pluginPermission, out var permissionStatus)
+                    ? ToPermissionStatus(permissionStatus)
+                    : PermissionStatus.Unknown;
+                taskCompletionSource.SetResult(status);
             });
 
-            var result = await CheckPermissionsAsync(permission);
+            var result = await taskCompletionSource.Task;
 
             return result;
         }
