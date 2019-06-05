@@ -38,7 +38,7 @@ namespace Softeq.XToolkit.Auth.Internal.Requests
                 {HttpConsts.ClientSecretKey, _config.ClientSecret},
                 {HttpConsts.UsernameKey, _dto.Email},
                 {HttpConsts.PasswordKey, _dto.Password},
-                {HttpConsts.ScopeKey, HttpConsts.ScopeApiKey }
+                {HttpConsts.ScopeKey, HttpConsts.ScopeApiOfflineAccessKey }
             };
 
             return new FormUrlEncodedContent(dict);

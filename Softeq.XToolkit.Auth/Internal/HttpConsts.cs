@@ -13,5 +13,7 @@ namespace Softeq.XToolkit.Auth.Internal
         public const string RefreshTokenKey = "refresh_token";
         public const string ScopeKey = "scope";
         public const string ScopeApiKey = "api";
+        public const string ScopeOfflineAccessKey = "offline_access";
+        public const string ScopeApiOfflineAccessKey = ScopeApiKey + " " + ScopeOfflineAccessKey;
     }
 }
