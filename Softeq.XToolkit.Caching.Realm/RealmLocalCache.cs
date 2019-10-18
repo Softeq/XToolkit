@@ -10,7 +10,7 @@ using Realms;
 
 namespace Softeq.XToolkit.Caching.Realm
 {
-    public class RealmLocalCache : ILocalCache
+    public class RealmLocalCache : ICache
     {
         private readonly IJsonSerializer _jsonSerializer;
 

@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Softeq.XToolkit.Common.Interfaces;
+using Softeq.XToolkit.Common.Logger;
 
 namespace Softeq.XToolkit.RemoteData.HttpClient
 {
@@ -30,9 +31,9 @@ namespace Softeq.XToolkit.RemoteData.HttpClient
         }
 
         public abstract string ApiUrl { get; }
-        
+
         protected abstract bool IsAuthorized { get; }
-        
+
         protected abstract string AccessToken { get; }
 
         public virtual async Task<string> SendAndGetResponseAsync(BaseRestRequest request)
@@ -95,7 +96,7 @@ namespace Softeq.XToolkit.RemoteData.HttpClient
         {
             if (string.IsNullOrEmpty(responseString))
             {
-                return new ServerException("Unknown server error") {StatusCode = statusCode};
+                return new ServerException("Unknown server error") { StatusCode = statusCode };
             }
 
             Logger.Debug(responseString);
@@ -113,7 +114,7 @@ namespace Softeq.XToolkit.RemoteData.HttpClient
 
             if (errorDto != null)
             {
-                return new ServerException("Server error", new[] {ToServerError(errorDto)}) {StatusCode = statusCode};
+                return new ServerException("Server error", new[] { ToServerError(errorDto) }) { StatusCode = statusCode };
             }
 
             var errors = default(List<ErrorDescription>);
@@ -128,8 +129,8 @@ namespace Softeq.XToolkit.RemoteData.HttpClient
             }
 
             var exception = errors == null
-                ? new ServerException("Unknown server error") {StatusCode = statusCode}
-                : new ServerException("Server error", errors) {StatusCode = statusCode};
+                ? new ServerException("Unknown server error") { StatusCode = statusCode }
+                : new ServerException("Server error", errors) { StatusCode = statusCode };
 
             TryHandleException(exception);
 
@@ -155,7 +156,7 @@ namespace Softeq.XToolkit.RemoteData.HttpClient
                     httpClient.DefaultRequestHeaders.Accept.Clear();
                     httpClient.DefaultRequestHeaders.Accept.Add(
                         new MediaTypeWithQualityHeaderValue(HttpConsts.ApplicationJsonHeaderValue));
-                    httpClient.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue {NoCache = true};
+                    httpClient.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true };
 
                     HttpResponseMessage response = null;
 
