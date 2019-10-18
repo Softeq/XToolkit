@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Softeq.XToolkit.Common.Interfaces;
+using Softeq.XToolkit.Common.Logger;
 using Softeq.XToolkit.RemoteData;
 using Softeq.XToolkit.RemoteData.HttpClient;
 
@@ -18,13 +19,13 @@ namespace Softeq.XToolkit.Caching
     {
         private const string LastModifiedHeaderKey = "Last-Modified";
 
-        private readonly ILocalCache _localCache;
+        private readonly ICache _localCache;
 
         protected CachedHttpClient(
             IJsonSerializer jsonSerializer,
             IRefreshTokenService refreshTokenService,
             ILogManager logManager,
-            ILocalCache localCache) : base(jsonSerializer, refreshTokenService, logManager)
+            ICache localCache) : base(jsonSerializer, refreshTokenService, logManager)
         {
             _localCache = localCache;
         }

@@ -4,9 +4,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Softeq.XToolkit.Common.Interfaces;
-using Softeq.XToolkit.Common.Models;
+using Softeq.XToolkit.Common.Logger;
 using Softeq.XToolkit.RemoteData.HttpClient;
+using Softeq.XToolkit.WhiteLabel.Model;
 
 namespace Softeq.XToolkit.RemoteData
 {

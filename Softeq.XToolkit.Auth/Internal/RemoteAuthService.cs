@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Softeq.XToolkit.Auth.Internal.Dtos;
 using Softeq.XToolkit.Auth.Internal.Requests;
 using Softeq.XToolkit.Common.Interfaces;
+using Softeq.XToolkit.Common.Logger;
 using Softeq.XToolkit.RemoteData;
 using Softeq.XToolkit.RemoteData.HttpClient;
 
