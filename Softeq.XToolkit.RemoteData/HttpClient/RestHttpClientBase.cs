@@ -78,15 +78,16 @@ namespace Softeq.XToolkit.RemoteData.HttpClient
 
         public async Task<Stream> GetStreamAsync(BaseRestRequest request)
         {
-            var response = await SendAsyncImpl(request).ConfigureAwait(false);
-            if (response == null)
+            using (var response = await SendAsyncImpl(request).ConfigureAwait(false))
             {
-                return null;
-            }
+                if (response == null)
+                {
+                    return null;
+                }
 
-            var result = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-            response.Dispose();
-            return result;
+                var result = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                return result;
+            }
         }
 
         protected virtual ServerException CreateException(string responseString, HttpStatusCode statusCode)
