@@ -86,7 +86,12 @@ namespace Softeq.XToolkit.RemoteData.HttpClient
                 }
 
                 var result = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                return result;
+
+                var stream = new MemoryStream();
+                await result.CopyToAsync(stream).ConfigureAwait(false);
+                stream.Seek(0, SeekOrigin.Begin);
+
+                return stream;
             }
         }
 
