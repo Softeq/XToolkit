@@ -44,7 +44,7 @@ namespace Softeq.XToolkit.Common.iOS.Helpers
         {
             result = default(string[]);
 
-            var linkPattern = @"(http|ftp|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?";
+            var linkPattern = @"([a-z]+://)?([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?";
             var links = Regex.Matches(self.Value, linkPattern);
             if (links.Count == 0)
             {
@@ -57,7 +57,13 @@ namespace Softeq.XToolkit.Common.iOS.Helpers
                 var item = links[i];
                 var range = new NSRange(item.Index, item.Value.Length);
                 var linkName = $"link{i}";
-                self.AddLink(item.Value, linkName, color, style, range);
+
+                var link = item.Value;
+                link = link.Contains("://") ? link : $"http://{link}";
+
+                var url = link.ToNSUrl();
+
+                self.AddLink(url, linkName, color, style, range);
                 linkNames.Add(linkName);
             }
 
@@ -66,13 +72,20 @@ namespace Softeq.XToolkit.Common.iOS.Helpers
             return self;
         }
 
-        public static NSMutableAttributedString AddLink(this NSMutableAttributedString self, string link,
+        public static NSMutableAttributedString AddLink(this NSMutableAttributedString self, NSUrl url,
             string linkName, UIColor color, NSUnderlineStyle style, NSRange range)
         {
-            self.AddAttribute(new NSString(linkName), NSUrl.FromString(link), range);
-            self.AddAttribute(UIStringAttributeKey.UnderlineStyle, NSNumber.FromInt32((int) style), range);
+            self.AddAttribute(new NSString(linkName), url, range);
+            self.AddAttribute(UIStringAttributeKey.UnderlineStyle, NSNumber.FromInt32((int)style), range);
             self.AddAttribute(UIStringAttributeKey.UnderlineColor, color, range);
             return self;
+        }
+
+        public static NSUrl ToNSUrl(this string link)
+        {
+            var uri = new System.Uri(link);
+            var url = NSUrl.FromString(uri.AbsoluteUri);
+            return url;
         }
     }
 }
