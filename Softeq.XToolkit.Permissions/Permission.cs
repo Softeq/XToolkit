@@ -7,6 +7,7 @@ namespace Softeq.XToolkit.Permissions
     {
         Camera,
         Storage,
-        MediaLibrary
+        MediaLibrary,
+        Location
     }
 }

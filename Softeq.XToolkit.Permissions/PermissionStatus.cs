@@ -7,6 +7,8 @@ namespace Softeq.XToolkit.Permissions
     {
         Granted,
         Denied,
+        Restricted,
+        Disabled,
         Unknown
     }
 }

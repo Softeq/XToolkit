@@ -68,6 +68,8 @@ namespace Softeq.XToolkit.Permissions.iOS
                     return Plugin.Permissions.Abstractions.Permission.Storage;
                 case Permission.MediaLibrary:
                     return Plugin.Permissions.Abstractions.Permission.MediaLibrary;
+                case Permission.Location:
+                    return Plugin.Permissions.Abstractions.Permission.Location;
                 default:
                     throw new NotImplementedException();
             }
@@ -83,6 +85,8 @@ namespace Softeq.XToolkit.Permissions.iOS
                     return Permission.MediaLibrary;
                 case Plugin.Permissions.Abstractions.Permission.Storage:
                     return Permission.Storage;
+                case Plugin.Permissions.Abstractions.Permission.Location:
+                    return Permission.Location;
                 default:
                     throw new NotImplementedException();
             }
